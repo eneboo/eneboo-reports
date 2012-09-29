@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Creditos" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="bea60d7b-3a81-4d44-ba4d-58462888e632">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="VERSION" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="CHANGELOG" class="java.lang.String" isForPrompting="false"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="154" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="64729bc7-1e90-4750-82fc-bfa4e70ebcf1" mode="Opaque" x="0" y="50" width="555" height="59" forecolor="#E4B724" backcolor="#6A6952"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Serif" size="48" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENEBOO REPORTS]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a538d06d-9e82-414a-8023-d0afca7befe6" x="0" y="109" width="555" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{VERSION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="497" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="fd00d5b3-e6d0-4da3-a20c-47d20380b5cf" x="0" y="0" width="555" height="14"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Soporte de documentos Jasper Reports (<=4.6.0) para Eneboo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d5a88950-cf12-4e6e-b521-1524a7ef51dd" x="0" y="34" width="555" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Gracias a todas las personas que han colaborado de alguna manera en este proyecto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b06fa596-0656-481f-b69f-723f1f4c1327" x="0" y="75" width="143" height="20"/>
+				<textElement/>
+				<text><![CDATA[HISTÓRICO DE CAMBIOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="efe072ba-1620-4f5c-a9c0-361b89984616" x="0" y="54" width="555" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Adaptación realizada por José A. Fernández ( aullasistemas@gmail.com )]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9cd97bc6-9bd4-4958-96af-d3256d709600" mode="Opaque" x="0" y="95" width="555" height="402" backcolor="#E9E9F3"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[$P{CHANGELOG}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="151">
+			<rectangle>
+				<reportElement uuid="8c6b0ce6-3905-4ef2-97ff-f5b9e880178b" x="0" y="41" width="555" height="89"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="bf389725-9bda-42d8-a993-2c4bf3e7b30e" x="0" y="0" width="555" height="15"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Esta librería se distribuye tal y como está, sin ninguna garantía, bajo licencia LGPLv3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4316c2d8-dcd7-49f0-a03c-2bac41781709" x="0" y="15" width="555" height="22"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Es un producto combinado con la librería Jasper Reports]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4250f26d-6203-4c47-9adc-ef3c874d4189" x="0" y="60" width="555" height="15"/>
+				<textElement/>
+				<text><![CDATA[http://jasperforge.org/projects/jasperreports/code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c6a7b137-605b-43f8-aaf8-8a39a7b7b0e5" x="0" y="45" width="100" height="15"/>
+				<textElement/>
+				<text><![CDATA[Fuentes :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6175be85-5d15-4093-a8e2-d8f67459246a" x="0" y="75" width="555" height="16"/>
+				<textElement/>
+				<text><![CDATA[http://adys.org/blackhole/src/sinai/gaspar/blackhole/Xpm.java]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fafcb7e9-ec75-469b-a869-59ccaea7bc84" x="0" y="91" width="100" height="13"/>
+				<textElement/>
+				<text><![CDATA[Licencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ff0d7c6e-7634-4f0d-95a0-dbdd948fcc40" x="0" y="104" width="555" height="13"/>
+				<textElement/>
+				<text><![CDATA[http://www.gnu.org/licenses/lgpl.html]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

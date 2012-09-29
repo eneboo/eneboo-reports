@@ -1,0 +1,33 @@
+28/08/2012
+*Corrección de Bugs.
+
+27/08/2012
+* Nuevos creditos.
+* Carga de Changelog en creditos.
+* El tiempo total de proceso se calcula mejor.
+
+26/08/2012
+* La librer&iacute;a no est&aacute; obligada a compilar siempre el report. Configurable desde la extensi&oacute;n.
+* la conexi&oacute;n a la BD solo se realiza al Inicializar la librer&iacute;a.
+
+24/08/2012
+* Soporte de ORDERBY y cantidades indefinidas de parametros por HASHMAP.
+* Eliminado texto versi&oacute;n . solo se muestra Build.
+* Se comienza a ordenar c&oacute;digo en funciones.
+
+22/08/2012
+* Si el tipo de letra no est&aacute; en el S.O. se utiliza el por defecto "SansSerif".
+* Soporte de WHERE y ORDERBY por hashmap.
+
+28/07/2012
+* Se cambia t&iacute;tulo ventana.
+
+27/07/2012
+* Titulo de ventana personalizado.
+* Logo ventana personalizado.
+* viewer.setAlwaysOnTop(true) , hasta que se muestra la ventana, una vez mostrada pasamos a viewer.setAlwaysOnTop(false). Si no pasamos a false , no se muestran los dialogos "Guardar" o "Imprimir".
+* Se muestra tiempo de procesado total en ventana.
+
+26/07/2012
+* Se añade tipo de letra Dejavu a la librer&iacute;a. Se usa como tipo de letra universal y evitamos que un cliente no la tenga.
+
