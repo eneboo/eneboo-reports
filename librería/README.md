@@ -1,23 +1,27 @@
 Necesitamos:
 
-* Java OpenJDK
+Java 7 JDK (de OpenJava,ORACLE ... )
 
 
-- Copiamos el contenido de carpeta sources (*.java) en carpeta tree
+* Copiamos el contenido de carpeta sources (*.java) en carpeta tree
+
+cd sources
 
 cp *.java ../tree
 
 
-- Compilamos ficheros .java
+* Compilamos ficheros .java
+
+cd ../tree
 
 javac enebooreports.java
 
 javac Xpm.java
 
 
-- Creamos el .jar
+* Creamos el .jar
 
 jar -cmvf manifiesto.txt enebooreports.jar *
 
 
-nos creará el enebooreports.jar
+Listo !!
