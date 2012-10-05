@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="i_pedidoscli" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.4641000000000017"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="168"/>
+	<parameter name="WHERE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["pedidoscli.codejercicio = '2012' AND pedidoscli.fecha >= '2012-06-18T00:00:00' AND pedidoscli.fecha <= '2012-06-20T00:00:00' AND empresa.id = '1'"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ORDERBY" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["pedidoscli.codigo"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 	pedidoscli.idpedido as idpedido,
+	pedidoscli.codigo as codigopedido,
+	pedidoscli.codserie as codserie,
+	pedidoscli.fecha as fechapedido,
+	pedidoscli.total as totalpedido,
+	pedidoscli.coddivisa as divisa,
+	pedidoscli.codejercicio as codejercicio,
+	pedidoscli.codpago as codformapago,
+	pedidoscli.codalmacen as codalmacen,
+	pedidoscli.pordtoesp as porcentagedescuentopedido,
+	pedidoscli.dtoesp as descuentopedido,
+	pedidoscli.totaliva as pedidototaliva,
+	pedidoscli.totalrecargo as totalrecargo,
+	pedidoscli.codcliente as codcliente,
+	pedidoscli.nombrecliente as nombrecliente,
+	pedidoscli.cifnif as cifnif,
+	pedidoscli.tasaconv as tasaconv,
+	pedidoscli.coddir as coddireccion,
+	pedidoscli.direccion as direccionpedido,
+	pedidoscli.codpostal as cppedido,
+	pedidoscli.ciudad as ciudadpedido,
+	pedidoscli.provincia as provinciapedido,
+	pedidoscli.apartado as apartadopedido,
+	pedidoscli.codpais as paispedido,
+	pedidoscli.neto as netopedido,
+	pedidoscli.netosindtoesp as netopedidosindto,
+	pedidoscli.observaciones as observacionespedido,
+	pedidoscli.irpf as pedidoirpf,
+	pedidoscli.totalirpf as pedidototalirpf,
+ 	lineaspedidoscli.idpedido as lineaapedidoidpedido,
+	lineaspedidoscli.referencia as referencia,
+	lineaspedidoscli.descripcion as descripcionreferencia,
+	lineaspedidoscli.cantidad as cantidadreferencia,
+	lineaspedidoscli.pvpunitario as referenciaprecio,
+	lineaspedidoscli.pvptotal as pvptotallinea,
+	lineaspedidoscli.codimpuesto as ivalinea,
+	lineaspedidoscli.iva as porivalinea,
+	empresa.nombre as nombreempresa,
+	empresa.cifnif as cifempresa,
+	empresa.direccion as direccionempresa,
+	empresa.logo as logoempresa,
+	empresa.codpostal as cpempresa,
+	empresa.ciudad as ciudadempresa,
+	empresa.provincia as provinciaempresa,
+	empresa.apartado as apartadoempresa,
+	empresa.codpais as codpaisempresa,
+	pedidoscli.neto+pedidoscli.totaliva+pedidoscli.totalrecargo,formaspago.descripcion as nomfpago,
+	(
+		select cuentasbcocli.descripcion from cuentasbcocli where cuentasbcocli.codcliente = pedidoscli.codcliente and cuentasbcocli.codcuenta = clientes.codcuentadom
+	) as nombanco
+FROM empresa, pedidoscli
+INNER JOIN lineaspedidoscli ON pedidoscli.idpedido = lineaspedidoscli.idpedido
+INNER JOIN formaspago ON pedidoscli.codpago = formaspago.codpago
+INNER JOIN clientes ON clientes.codcliente = pedidoscli.codcliente
+WHERE $P!{WHERE}
+ORDER BY $P!{ORDERBY}]]>
+	</queryString>
+	<field name="idpedido" class="java.lang.Integer"/>
+	<field name="codigopedido" class="java.lang.String"/>
+	<field name="codserie" class="java.lang.String"/>
+	<field name="fechapedido" class="java.sql.Date"/>
+	<field name="totalpedido" class="java.lang.Double"/>
+	<field name="divisa" class="java.lang.String"/>
+	<field name="codejercicio" class="java.lang.String"/>
+	<field name="codformapago" class="java.lang.String"/>
+	<field name="codalmacen" class="java.lang.String"/>
+	<field name="porcentagedescuentopedido" class="java.lang.Double"/>
+	<field name="descuentopedido" class="java.lang.Double"/>
+	<field name="pedidototaliva" class="java.lang.Double"/>
+	<field name="totalrecargo" class="java.lang.Double"/>
+	<field name="codcliente" class="java.lang.String"/>
+	<field name="nombrecliente" class="java.lang.String"/>
+	<field name="cifnif" class="java.lang.String"/>
+	<field name="tasaconv" class="java.lang.Double"/>
+	<field name="coddireccion" class="java.lang.Integer"/>
+	<field name="direccionpedido" class="java.lang.String"/>
+	<field name="cppedido" class="java.lang.String"/>
+	<field name="ciudadpedido" class="java.lang.String"/>
+	<field name="provinciapedido" class="java.lang.String"/>
+	<field name="apartadopedido" class="java.lang.String"/>
+	<field name="paispedido" class="java.lang.String"/>
+	<field name="netopedido" class="java.lang.Double"/>
+	<field name="netopedidosindto" class="java.lang.Double"/>
+	<field name="observacionespedido" class="java.lang.String"/>
+	<field name="pedidoirpf" class="java.lang.Double"/>
+	<field name="pedidototalirpf" class="java.lang.Double"/>
+	<field name="lineaapedidoidpedido" class="java.lang.Integer"/>
+	<field name="referencia" class="java.lang.String"/>
+	<field name="descripcionreferencia" class="java.lang.String"/>
+	<field name="cantidadreferencia" class="java.lang.Double"/>
+	<field name="referenciaprecio" class="java.lang.Double"/>
+	<field name="pvptotallinea" class="java.lang.Double"/>
+	<field name="ivalinea" class="java.lang.String"/>
+	<field name="porivalinea" class="java.lang.Double"/>
+	<field name="nombreempresa" class="java.lang.String"/>
+	<field name="cifempresa" class="java.lang.String"/>
+	<field name="direccionempresa" class="java.lang.String"/>
+	<field name="logoempresa" class="java.lang.String"/>
+	<field name="cpempresa" class="java.lang.String"/>
+	<field name="ciudadempresa" class="java.lang.String"/>
+	<field name="provinciaempresa" class="java.lang.String"/>
+	<field name="apartadoempresa" class="java.lang.String"/>
+	<field name="codpaisempresa" class="java.lang.String"/>
+	<field name="?column?" class="java.lang.Double"/>
+	<field name="nomfpago" class="java.lang.String"/>
+	<field name="nombanco" class="java.lang.String"/>
+	<group name="IDPEDIDO" isStartNewPage="true" isResetPageNumber="true" isReprintHeaderOnEachPage="true" footerPosition="StackAtBottom" keepTogether="true">
+		<groupExpression><![CDATA[$F{idpedido}]]></groupExpression>
+		<groupHeader>
+			<band height="220">
+				<rectangle>
+					<reportElement x="1" y="191" width="368" height="20" forecolor="#FEFEFE" backcolor="#AAAAAA"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="369" y="191" width="49" height="20" forecolor="#FEFEFE" backcolor="#AAAAAA"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="418" y="191" width="59" height="20" forecolor="#FEFEFE" backcolor="#AAAAAA"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="477" y="191" width="78" height="20" forecolor="#FEFEFE" backcolor="#AAAAAA"/>
+				</rectangle>
+				<textField isBlankWhenNull="true">
+					<reportElement x="309" y="97" width="246" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{provinciapedido}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="309" y="77" width="82" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cppedido}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="77" y="149" width="116" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{codigopedido}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="77" y="129" width="116" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{fechapedido}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="13" y="129" width="64" height="20"/>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="13" y="149" width="64" height="20"/>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Pedido:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="13" y="17" width="238" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nombreempresa}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="13" y="37" width="238" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{direccionempresa}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="13" y="57" width="64" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cpempresa}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="77" y="57" width="174" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ciudadempresa}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="160" y="77" width="91" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cifempresa}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="13" y="77" width="147" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{provinciaempresa}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="1" y="195" width="368" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Descripción]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="369" y="195" width="49" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cantidad]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="418" y="195" width="59" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Precio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="477" y="195" width="78" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Importe]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="309" y="17" width="100" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{cifnif}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="309" y="57" width="246" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{direccionpedido}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="309" y="37" width="246" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nombrecliente}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="391" y="77" width="164" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ciudadpedido}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="191">
+				<rectangle>
+					<reportElement x="381" y="48" width="174" height="40" forecolor="#9B9B9B"/>
+				</rectangle>
+				<textField isBlankWhenNull="true">
+					<reportElement x="1" y="129" width="221" height="61"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{observacionespedido}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="477" y="2" width="78" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{netopedidosindto}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="391" y="2" width="86" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Suma]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="391" y="68" width="82" height="18"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Pedido]]></text>
+				</staticText>
+				<textField pattern="#,##0.00 ¤;-#,##0.00 ¤">
+					<reportElement x="473" y="68" width="79" height="18"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{totalpedido}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="260" y="110" width="295" height="1" forecolor="#9D9B9B"/>
+				</line>
+				<textField>
+					<reportElement x="357" y="112" width="198" height="20"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{nomfpago}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="260" y="112" width="91" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Forma de Pago:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="43" width="554" height="1" forecolor="#AAAAAA"/>
+				</line>
+				<staticText>
+					<reportElement x="1" y="115" width="91" height="20">
+						<printWhenExpression><![CDATA[$F{observacionespedido}!=null]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Observaciones:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="391" y="22" width="55" height="20">
+						<printWhenExpression><![CDATA[$F{porcentagedescuentopedido} != 0]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Desc.]]></text>
+				</staticText>
+				<textField pattern="###0" isBlankWhenNull="true">
+					<reportElement x="446" y="22" width="21" height="20">
+						<printWhenExpression><![CDATA[$F{porcentagedescuentopedido}!=0]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{porcentagedescuentopedido}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="467" y="22" width="10" height="20">
+						<printWhenExpression><![CDATA[$F{porcentagedescuentopedido} != 0]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[%]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="477" y="22" width="78" height="20">
+						<printWhenExpression><![CDATA[$F{porcentagedescuentopedido}!=0]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{descuentopedido}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="446" y="50" width="27" height="18"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[IVA]]></text>
+				</staticText>
+				<textField pattern="#,##0.00 ¤;-#,##0.00 ¤">
+					<reportElement x="473" y="50" width="79" height="18"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{pedidototaliva}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="50"/>
+	</pageHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="13" y="0" width="356" height="17"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descripcionreferencia}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
+				<reportElement x="369" y="0" width="43" height="17">
+					<printWhenExpression><![CDATA[$F{cantidadreferencia} != 0]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{cantidadreferencia}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement x="412" y="0" width="65" height="17">
+					<printWhenExpression><![CDATA[$F{referenciaprecio} != 0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{referenciaprecio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+				<reportElement x="477" y="0" width="78" height="17">
+					<printWhenExpression><![CDATA[$F{pvptotallinea} != 0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{pvptotallinea}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="10">
+			<textField>
+				<reportElement x="455" y="0" width="100" height="10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
