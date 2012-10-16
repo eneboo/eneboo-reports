@@ -29,7 +29,7 @@ public class enebooreports {
                             
                             String ficheroTemp, impresora;
                             String changelog = "";
-			    String build = "Build 20120828 ( Paula )";
+			    String build = "Build 20121016 ( Lola )";
 			    Boolean pdf,impDirecta, guardaTemporal;
 			    int nCopias, nParametrosJasper;
 			    long start;
@@ -118,20 +118,19 @@ public class enebooreports {
                                         
 						
 			} catch (JRException e) {
-				JOptionPane.showMessageDialog(null, "Se ha producido un error (JRException) : \n " + e.getMessage(), "Eneboo Reports", 1);
+				JOptionPane.showMessageDialog(null, "Se ha producido un error (JRException) : \n " + e.toString(), "Eneboo Reports", 1);
 				e.printStackTrace();
 			}catch (SQLException e) {
-				JOptionPane.showMessageDialog(null, "Se ha producido un error (SQLException) : \n " + e.getMessage(), "Eneboo Reports", 1);
+				JOptionPane.showMessageDialog(null, "Se ha producido un error (SQLException) : \n " + e.toString(), "Eneboo Reports", 1);
 				 e.printStackTrace();
 			}		
 			 catch (ClassNotFoundException e) {
-				JOptionPane.showMessageDialog(null, "Se ha producido un error (ClassNotFoundException) : \n " + e.getMessage(), "Eneboo Reports", 1);
+				JOptionPane.showMessageDialog(null, "Se ha producido un error (ClassNotFoundException) : \n " + e.toString(), "Eneboo Reports", 1);
 				 e.printStackTrace();
 			} 
-			 catch (Exception e) {  
-			String mensajeE = e.getMessage();
-                        if(!mensajeE.equals( "null" ) )
-            JOptionPane.showMessageDialog(null, "Se ha producido un error (Exception) : \n " + mensajeE , "Eneboo Reports", 1);
+			 catch (Exception e) {
+			 if (!e.getMessage().equals("null"))  //Para que no muestre mensaje de error cuando se cierra el ejecutable 
+            		JOptionPane.showMessageDialog(null, "main :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
 	    e.printStackTrace();
 		       }  
 		
@@ -155,14 +154,12 @@ public class enebooreports {
                                     					//viewer.setSize(850, 500);
 									//viewer.setIconImage(new ImageIcon("elefante.gif").getImage()); //No lo coge
 									viewer.setAlwaysOnTop(true); //Siempre delante    
-									viewer.setTitle("Eneboo Reports - "+ build + " (" + (System.currentTimeMillis() - start) + ")"); 
+									viewer.setTitle(print.getName() + " - Eneboo Reports"); 
 									viewer.setVisible(true);
 									viewer.setAlwaysOnTop(false); //Ahora no interesa estar siempre 
 								    	}
 					 catch (Exception e) {  
-			String mensajeE = e.getMessage();
-                        if(!mensajeE.equals( "null" ) )
-            JOptionPane.showMessageDialog(null, "Se ha producido un error (Exception) : \n " + mensajeE , "Eneboo Reports", 1);
+            JOptionPane.showMessageDialog(null, "mostrarVisor :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
 	    e.printStackTrace();
 		       }
 		       }  
@@ -206,9 +203,7 @@ public class enebooreports {
 							} 
 						
 		}catch (Exception e) {  
-			String mensajeE = e.getMessage();
-                        if(!mensajeE.equals( "null" ) )
-            JOptionPane.showMessageDialog(null, "impresionDirecta() :: Se ha producido un error (Exception) : \n " + mensajeE , "Eneboo Reports", 1);
+            JOptionPane.showMessageDialog(null, "impresionDirecta :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
 	    e.printStackTrace();
 		       }  									}	
 }
