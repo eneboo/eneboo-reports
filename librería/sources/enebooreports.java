@@ -18,6 +18,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
 
@@ -34,8 +35,8 @@ public class enebooreports {
 			    long start;
 			    Class.forName(args[0]);
 			    //JOptionPane.showMessageDialog(null, "Init iniciado" , "Eneboo Reports", 1);
-			    InputStream is=enebooreports.class.getClass().getResourceAsStream("/otros/init.jrxml");
-			    JasperReport creditos = JasperCompileManager.compileReport(is);
+			    InputStream is=enebooreports.class.getClass().getResourceAsStream("/otros/init.jasper");
+			    JasperReport creditos = (JasperReport) JRLoader.loadObject(is);
 			    JasperReport report = creditos;      
                             Connection conn = DriverManager.getConnection(args[1],args[2],args[3]);
                             //JOptionPane.showMessageDialog(null, "Init finalizado" , "Eneboo Reports", 1);
