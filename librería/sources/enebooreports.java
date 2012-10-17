@@ -37,7 +37,18 @@ public class enebooreports {
 			    //JOptionPane.showMessageDialog(null, "Init iniciado" , "Eneboo Reports", 1);
 			    InputStream is=enebooreports.class.getClass().getResourceAsStream("/otros/init.jasper");
 			    JasperReport creditos = (JasperReport) JRLoader.loadObject(is);
-			    JasperReport report = creditos;      
+			    JasperReport report = creditos;
+
+			    // Cargamos changelog
+			    InputStream chl = enebooreports.class.getResourceAsStream("/otros/changelog");
+     			    BufferedReader br2 = new BufferedReader(new InputStreamReader(chl));
+     			    String line= null;
+     			    String listadoCompleto = "";
+     			    while (null != (line = br2.readLine())) {
+        							 listadoCompleto = listadoCompleto + line + "<br>";
+      				        			    }  
+
+   
                             Connection conn = DriverManager.getConnection(args[1],args[2],args[3]);
                             //JOptionPane.showMessageDialog(null, "Init finalizado" , "Eneboo Reports", 1);
 			    do
@@ -70,41 +81,26 @@ public class enebooreports {
 			if (ficheroTemp.equals( "version" )) 
 						{
 						report = creditos;
-						guardaTemporal = true;
+						guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
 						hm.put("VERSION", build);
-     						InputStream chl = enebooreports.class.getResourceAsStream("/otros/changelog");
-     						BufferedReader br2 = new BufferedReader(new InputStreamReader(chl));
-     						String line= null;
-     						String listadoCompleto = "";
-     						 while (null != (line = br2.readLine())) {
-        								 listadoCompleto = listadoCompleto + line + "<br>";
-      											}
-						hm.put("CHANGELOG",listadoCompleto);
+						hm.put("CHANGELOG",listadoCompleto);						
 						}
 					else {     
-                          	       
-                                       if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
-                                       			guardaTemporal = true;
-                                        		 else 
-                                        		 report = JasperCompileManager.compileReport(ficheroTemp);
-                                        		 
-                                        		
+                          	       		if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
+                                       				guardaTemporal = true; //Para no intentar borrar luego un fichero que no existe
+                                       			 		 else 
+                                        		 	report = JasperCompileManager.compileReport(ficheroTemp);
 
-					
-					   for(int j = 0; j < nParametrosJasper; j++ )
+	                                       for(int j = 0; j < nParametrosJasper; j++ )
                          				  if(!parametroValor[j].equals( "") && !parametroNombre[j].equals( ""))
-	 						 		hm.put(parametroNombre[j], parametroValor[j]); //Seteamos Parametros
-						 }
+	 						 		hm.put(parametroNombre[j], parametroValor[j]); //Seteamos Parametros en mapa
+					      }
 						 
 					JasperPrint print = JasperFillManager.fillReport(report, hm, conn); //Rellenamos el report compilado
-					
 					if (impDirecta) impresionDirecta( impresora, nCopias, print );
-							  else
-					 			if(pdf) 
-					 				{
-     						 			JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
-									}
-								else mostrarVisor( print, build, start);
+							else
+					 		if(pdf) JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
+								          else mostrarVisor( print, build, start);
 							  	       
 				if (!guardaTemporal)
 						{
