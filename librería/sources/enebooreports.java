@@ -29,7 +29,7 @@ public class enebooreports {
                             
                             String ficheroTemp, impresora;
                             String changelog = "";
-			    String build = "Build 20121016 ( Lola )";
+			    String build = "Build 20121019 ( Lola )";
 			    Boolean pdf,impDirecta, guardaTemporal;
 			    int nCopias, nParametrosJasper;
 			    long start;
