@@ -29,7 +29,8 @@ public class enebooreports {
                             
                             String ficheroTemp, impresora;
                             String changelog = "";
-			    String build = "Build 20121019 ( Lola )";
+			    String build = "Build 20121021 ( Lola )";
+			    String versionJR = "4.7.1";
 			    Boolean pdf,impDirecta, guardaTemporal;
 			    int nCopias, nParametrosJasper;
 			    long start;
@@ -83,7 +84,8 @@ public class enebooreports {
 						report = creditos;
 						guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
 						hm.put("VERSION", build);
-						hm.put("CHANGELOG",listadoCompleto);						
+						hm.put("CHANGELOG",listadoCompleto);
+						hm.put("VERSION",versionJR);						
 						}
 					else {     
                           	       		if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
@@ -125,7 +127,7 @@ public class enebooreports {
 				 e.printStackTrace();
 			} 
 			 catch (Exception e) {
-			 if (!e.getMessage().equals("null"))  //Para que no muestre mensaje de error cuando se cierra el ejecutable 
+			if (!e.getMessage().equals("null"))  //Para que no muestre mensaje de error cuando se cierra el ejecutable 
             		JOptionPane.showMessageDialog(null, "main :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
 	    e.printStackTrace();
 		       }  
