@@ -66,7 +66,7 @@ jive.interactive.column = jive.interactive.column || {
             lt = c.offset().left;
             colData = it.getColumnByUuid(c.data('popupid'), tableUuid);
             if (colData != null) {
-            	colData.enabled = true;	// enable column
+            	colData.visible = true;	// enable column
             }
             it.dropColumns[tableUuid].push('col_'+c.data('popupcolumn'));
             it.dropPoints[tableUuid].push(lt);
@@ -135,7 +135,7 @@ jive.interactive.column = jive.interactive.column || {
     onSelect: function(){
         var it = this,
         	allOption = [],
-        	pmenu = jive.ui.foobar.menus.column.format.jo.find('ul[label="showColumns"]').eq(0),
+        	pmenu = jive.ui.foobar.menus.column.showColumns.jo,
         	tableUuid = jive.selected.jo.closest('.jrtableframe').data('uuid'),
         	allColumns = it.allColumns[tableUuid];
 
@@ -155,7 +155,7 @@ jive.interactive.column = jive.interactive.column || {
         			menuItmArgs.column = [col.index];
         			jQuery(el).data('args', menuItmArgs);
         		}
-        		if (col && col.enabled === true) {
+        		if (col && col.visible === true) {
         			el.style.display = 'none';
         		} else if (col){
         			allOption.push(col.index);
@@ -167,10 +167,10 @@ jive.interactive.column = jive.interactive.column || {
         });
         
         if(allOption.length > 0){
-        	pmenu.parent().show();
+            jive.ui.foobar.menus.column.format.jo.find('li').eq(2).show();
             pmenu.children().eq(0).data('args',{hide:false,column:allOption});
         } else {
-            pmenu.parent().hide();
+            jive.ui.foobar.menus.column.format.jo.find('li').eq(2).hide();
         }
         
         // disable sort/filter if not sortable/filterable
@@ -773,7 +773,7 @@ jive.interactive.column.formatHeaderForm = {
             },
             {
                 type: 'buttons',
-                label:'Color',
+                label: jive.i18n.get('column.formatforms.color.label'),
                 items: [
                     {type:'color',id:'headerFontColor',bIcon:'fontColorIcon',title:jive.i18n.get('column.formatforms.fontColor.title'), drop: true}
                 ]
@@ -782,7 +782,7 @@ jive.interactive.column.formatHeaderForm = {
         [
             {
                 type: 'buttons',
-                label:'Alignment',
+                label: jive.i18n.get('column.formatforms.alignment.label'),
                 items: [
                     {type:'radio',id:'headerFontAlign',value:'Left',bIcon:'leftIcon'},
                     {type:'radio',id:'headerFontAlign',value:'Center',bIcon:'centerIcon'},
@@ -875,7 +875,7 @@ jive.interactive.column.formatCellsForm = {
             },
             {
                 type: 'buttons',
-                label:'Color',
+                label: jive.i18n.get('column.formatforms.color.label'),
                 items: [
                     {type:'color',id:'cellsFontColor',bIcon:'fontColorIcon',title:jive.i18n.get('column.formatforms.fontColor.title'), drop: true}
                 ]
@@ -884,7 +884,7 @@ jive.interactive.column.formatCellsForm = {
         [
             {
                 type: 'buttons',
-                label:'Alignment',
+                label: jive.i18n.get('column.formatforms.alignment.label'),
                 items: [
                     {type:'radio',id:'cellsFontAlign',value:'Left',bIcon:'leftIcon'},
                     {type:'radio',id:'cellsFontAlign',value:'Center',bIcon:'centerIcon'},
@@ -897,7 +897,7 @@ jive.interactive.column.formatCellsForm = {
             {
                 type:'buttons',
                 id: 'numberFormatButtons',
-                label: 'Number Format',
+                label: jive.i18n.get('column.formatforms.numberformat.label'),
                 items: [
 //                  {type:'checkbox',id:'currencyBtn',fn:'toggleCurrencyFormat',value:'',bIcon:'currencyIcon'},
                     {type:'checkbox',id:'percentageBtn',fn:'togglePercentageFormat',value:'',bIcon:'percentageIcon'},
@@ -910,7 +910,7 @@ jive.interactive.column.formatCellsForm = {
         [
             {
                 type:'buttons',
-                label: 'Currency',
+                label: jive.i18n.get('column.formatforms.currency.label'),
                 items: [
                     {
                         type: 'dropdown',
@@ -919,7 +919,7 @@ jive.interactive.column.formatCellsForm = {
                         fn: 'showCurrencyDropDown',
                         bIcon: 'currencyIcon',
                         options: {
-                            'none': {label: '&lt;None&gt;', value: '', fn: 'applyCurrencyFormat'},
+                            'none': {label: jive.i18n.get('column.formatforms.currency.none.label'), value: '', fn: 'applyCurrencyFormat'},
                             'locale_specific': {label: jive.i18n.get('column.formatCellsForm.numberFormatButtons.localespecific.label'), value: '\u00A4', fn: 'applyCurrencyFormat'},
                             'dollar': {label: '\u0024 - USD', value: '\u0024', fn: 'applyCurrencyFormat'},
                             'euro': {label: '\u20AC - EUR', value: '\u20AC', fn: 'applyCurrencyFormat'},

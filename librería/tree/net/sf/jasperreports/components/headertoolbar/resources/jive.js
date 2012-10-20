@@ -5,6 +5,7 @@ jQuery.extend(jive, {
         jQuery.extend(jive,settings);
         jQuery('div.jrPage').parent().on('click touchend',function(){
             jive.hide();
+            jQuery.event.trigger('jive_inactive');
         });
 
         jQuery('#jive_components').length == 0 &&  jQuery('body').append('<div id="jive_components"></div>');
@@ -53,20 +54,22 @@ jQuery.extend(jive, {
             'mouseover': function(evt){
                 jmenuitem = jQuery(this);
                 jmenuitem.addClass('hover');
-                var submenu = jmenuitem.children('ul');
-                if(submenu.length){
-                    submenu.show().position({
+                if(jmenuitem.width() < (jmenuitem.parent().width() - 24)) {
+                    jmenuitem.width(jmenuitem.parent().width()-24); // IE7 fix
+                }
+                jmenuitem.parent().prevAll().hide();
+                var key = jmenuitem.attr('key');
+                if(jive.ui.foobar.menus[jive.selected.ie.type][key]){
+                    jive.ui.foobar.menus[jive.selected.ie.type][key].jo.show().position({
                         of: jmenuitem,
                         my: 'left top',
                         at: 'right top'
                     });
                 }
-
             },
             'mouseout': function(evt){
                 jmenuitem = jQuery(this);
                 jmenuitem.removeClass('hover');
-                jmenuitem.children().hide();
             }
         }, '.pmenuitem');
 
@@ -101,41 +104,58 @@ jQuery.extend(jive, {
         if(!jive.selectors[o.selector]){
             jive.selectors[o.selector] = o.type;
             jQuery('div.jrPage').on('click touchend',o.selector,function(evt){
-                var jo = jQuery(this);
-                jive.selectInteractiveElement(jo);
-                return false;
+            	// keep html links functional
+            	if(jQuery(evt.target).closest('a').size() == 0) {
+            		var jo = jQuery(this);
+            		jive.selectInteractiveElement(jo);
+            		return false;
+            	}
             })
         }
         if(o.proxySelector && !jive.selectors[o.proxySelector]) {
             jive.selectors[o.proxySelector] = o.type;
             jQuery('div.jrPage').on('click touchend',o.proxySelector,function(evt){
-                var jo = jive.interactive[o.type].getInteractiveElementFromProxy(jQuery(this));
-                jive.selectInteractiveElement(jo);
-                return false;
+            	// keep html links functional
+            	if(jQuery(evt.target).closest('a').size() == 0) {
+            		var jo = jive.interactive[o.type].getInteractiveElementFromProxy(jQuery(this));
+            		jive.selectInteractiveElement(jo);
+            		return false;
+            	}
             })
         }
     },
     selectInteractiveElement: function(jo){
-        jive.selected = {
-            ie: jive.elements[jo.data('popupid')],
-            jo: jo
-        };
-        var dim = jive.interactive[jive.selected.ie.type].getElementSize();
-
-        jive.ui.overlay.show(dim);
-        jive.ui.marker.show(dim);
-        jive.ui.foobar.show(dim);
-        jive.ui.foobar.dropMenu && jive.ui.foobar.dropMenu.jo.hide();
-
-        jive.interactive[jive.selected.ie.type].onSelect();
+    	if (jo.is('.interactiveElement')) {
+	        jive.ui.dialog.isVisible && jive.ui.dialog.hide();
+	        jive.selected = {
+	            ie: jive.elements[jo.data('popupid')],
+	            jo: jo
+	        };
+	        var dim = jive.interactive[jive.selected.ie.type].getElementSize();
+	
+	        jive.ui.overlay.show(dim);
+	        jive.ui.marker.show(dim);
+	        jive.ui.foobar.show(dim);
+	        jive.ui.foobar.dropMenu && jive.ui.foobar.dropMenu.jo.hide();
+	
+	        jive.active = true;
+	        jive.started = true;
+	        jive.interactive[jive.selected.ie.type].onSelect();
+    	}
     },
-    hide: function(items){
+    hide: function(items, keepDialogOpen){
         if(!items){
+        	if (keepDialogOpen) {
+        		jive.active = jive.ui.dialog.isVisible;
+        	} else {
+        		jive.active = false;
+        		jive.ui.dialog.isVisible && jive.ui.dialog.hide();
+        	}
             jive.ui.marker.jo && jive.ui.marker.jo.appendTo('#jive_components').hide();
             jive.ui.overlay.jo && jive.ui.overlay.jo.appendTo('#jive_components').hide();
             jive.ui.foobar.jo && jive.ui.foobar.jo.appendTo('#jive_components').hide();
-            jive.ui.foobar.dropMenu && jive.ui.foobar.dropMenu.jo.appendTo('#jive_menus').hide();
             jQuery('.pmenu').hide();
+            jive.ui.colorpicker.jo && jive.ui.colorpicker.jo.hide();
         } else {
             jQuery.each(items,function(i,v){
                 jive.ui[v].jo && jive.ui[v].jo.hide();
@@ -297,8 +317,7 @@ jive.ui.foobar = {
             jQuery.each(actionMap,function(k,v){
                 if(v.actions) {
                     it.menus[jive.selected.ie.type] = it.menus[jive.selected.ie.type] || {};
-                    htm = it.createMenu(k, v.label, v.actions);
-                    it.menus[jive.selected.ie.type][k] ={jo:jQuery(htm).appendTo('#jive_menus')};
+                    it.createMenu(k, v.label, v.actions);
                 }
                 tmpl[1] = v.title;
                 tmpl[3] = k;
@@ -316,23 +335,18 @@ jive.ui.foobar = {
     },
     createMenu: function(key, label, items){
         var it = this,
-            lbl = label || key,
             htm = '<ul class="pmenu" label="'+key+'">';
         jQuery.each(items,function(k,v){
             if(!v.disabled) {
                 var attr = v.fn ? 'fn="'+v.fn+'"' : '',
                     label = v.label || k;
                 attr += v.arg ? " data-args='"+v.arg+"'" : "";
-                htm += '<li class="pmenuitem" '+attr+'>'+label;
-                if(v.actions) {
-                    htm += it.createMenu(k, v.label, v.actions);
-                }
-                htm += '</li>';
+                htm += '<li class="pmenuitem" key="'+k+'" '+attr+'>'+label+'</li>';
+                v.actions && it.createMenu(k, v.label, v.actions);
             }
         });
         htm += '</ul>';
-
-        return htm;
+        it.menus[jive.selected.ie.type][key] ={jo:jQuery(htm).appendTo('#jive_menus')};
     },
     reset: function() {
         this.cache = {};
@@ -344,6 +358,7 @@ jasperreports.events.registerEvent('jive.ui.foobar').trigger();
 jive.ui.dialog = {
     jo: null,
     body: null,
+    isVisible: false,
     setElement: function(selector){
         var it = this;
         var jo, input;
@@ -407,20 +422,13 @@ jive.ui.dialog = {
         });
         jQuery('#dialogOk, #dialogCancel').bind('click touchend',function(e){
             if(this.className.indexOf('disabled') < 0){
-                var ids = [];
-                jive.ui.dialog.jo.hide();
-                jive.ui.pageOverlay && jive.ui.pageOverlay.hide();
-                it.body.children().each(function(){
-                    ids.push(this.id.substring(10));
-                    jQuery(this).appendTo('#jive_forms').hide();
-                });
-
-                jQuery('#jive_dropdown .pmenu').hide();
-
-                this.id == 'dialogOk' && jive.selected.form.submit();
-                jQuery.each(ids,function(i,v){
-                    jive.ui.forms[v].onHide && jive.ui.forms[v].onHide();
-                });
+                if(this.id == 'dialogCancel'){
+                    jive.active = false;
+                    jQuery.event.trigger('jive_inactive');
+                } else {
+                    jive.selected.form.submit();
+                }
+                jive.ui.dialog.hide();
             }
         });
     },
@@ -453,8 +461,25 @@ jive.ui.dialog = {
         this.title.html(title);
         jive.ui.pageOverlay && jive.ui.pageOverlay.show();
         jive.selected.form.jo.show();
-        this.jo.show().position({of:jQuery('div.jrPage').parent(), at:'center top', my:'center top', offset: '0 128'});
-        jive.hide();
+        this.jo.show().position({of:jQuery(window), at:'center top', my:'center top', offset: '0 ' + (128 + jQuery('div.jrPage').offset().top), collision: 'none'});
+        this.isVisible = true;
+        jive.hide(null, true);
+    },
+    hide:function(){
+        var it = this;
+        var ids = [];
+        jive.ui.dialog.jo.hide();
+        jive.ui.pageOverlay && jive.ui.pageOverlay.hide();
+        it.body.children().each(function(){
+            ids.push(this.id.substring(10));
+            jQuery(this).appendTo('#jive_forms').hide();
+        });
+
+        jQuery('#jive_dropdown .pmenu').hide();
+
+        jQuery.each(ids,function(i,v){
+            jive.ui.forms[v].onHide && jive.ui.forms[v].onHide();
+        });
     },
     toggleButtons: function() {
         jQuery('#dialogOk, #dialogCancel').toggleClass('disabled');

@@ -1,3 +1,7 @@
+21/10/2012
+* Se añade paquete barbecue, para soporte de códigos de barras.
+* Actualizamos a Jasper Library 4.7.1.
+
 16/10/2012
 * Mejoras en Inicializaci&oacute;n.Se reduce el tiempo hasta un 75%.
 * La barra de t&iacute;tulo muestra nombre de documento.
