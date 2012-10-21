@@ -1656,7 +1656,7 @@ public class Xpm
 
 		int parse, parseend;
 		int width, height,colcount,charsperpixel;
-		Hashtable colorlookup = new Hashtable();
+		Hashtable<Integer,Integer> colorlookup = new Hashtable<Integer,Integer>();
 		// add default val for "transparent"
 		// the initial 0xff should mean it should not show up
 		
