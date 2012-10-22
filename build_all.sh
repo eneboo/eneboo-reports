@@ -40,10 +40,13 @@ cd ..
 cp temp/*.class .
 jar -cmvf manifiesto.txt enebooreports.jar enebooreports.class Xpm.class otros/* >>/dev/null
 echo "* Generando EnebooReports.zip"
+mkdir fonts
+echo "Añade es este directorio las tipografías especiales que usen tus reports." >> fonts/README.txt
 zip EnebooReports.zip lib/* fonts/* enebooreports.jar >> /dev/null
 echo "* Limpiando"
 rm -fr temp
 rm -f *.class
 rm -f *.jar
 rm -f *.txt
+rm -fr fonts
 echo "¡¡ PROCESO TERMINADO !!"
