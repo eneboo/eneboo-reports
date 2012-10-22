@@ -125,9 +125,13 @@ public class enebooreports {
 			 catch (ClassNotFoundException e) {
 				JOptionPane.showMessageDialog(null, "Se ha producido un error (ClassNotFoundException) : \n " + e.toString(), "Eneboo Reports", 1);
 				 e.printStackTrace();
+			}
+			 catch (net.sf.jasperreports.engine.util.JRFontNotFoundException e) {
+				JOptionPane.showMessageDialog(null, "Se ha producido un error (JRFontNotFoundException) : \n " + e.toString(), "Eneboo Reports", 1);
+				 e.printStackTrace();
 			} 
 			 catch (Exception e) {
-			 if (e.getMessage().equals("null"))  //Para que no muestre mensaje de error cuando se cierra el ejecutable 
+			 if (!e.getMessage().equals("null"))  //Para que no muestre mensaje de error cuando se cierra el ejecutable 
             		JOptionPane.showMessageDialog(null, "main :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
 	    e.printStackTrace();
 		       }  
