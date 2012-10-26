@@ -112,7 +112,7 @@ public class enebooreports {
 						}
 					  
 					
- 				} while (!ficheroTemp.equals( "" ));
+ 				} while (!ficheroTemp.equals( "version" ));
                                         
 						
 			} catch (JRException e) {
