@@ -169,6 +169,7 @@ public static String ficheroTemp;
 									//viewer.setIconImage(new ImageIcon("elefante.gif").getImage()); //No lo coge
 									viewer.setAlwaysOnTop(true); //Siempre delante    
 									viewer.setTitle(print.getName() + " - Eneboo Reports"); 
+									viewer.setIconImage(new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo32.gif")).getImage());
 									viewer.setVisible(true);
 									viewer.setAlwaysOnTop(false); //Ahora no interesa estar siempre 
 								    	}
