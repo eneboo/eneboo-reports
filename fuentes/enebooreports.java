@@ -3,6 +3,7 @@ import java.sql.*;
 import java.util.*;
 import javax.swing.*;
 import java.lang.ClassLoader;
+import java.lang.Throwable;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.print.PrinterJob;
@@ -21,15 +22,21 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
+import org.postgresql.util.*;
+
+
 
 public class enebooreports {
  
+public static String ficheroTemp;
+ 
                 public static void main(String[] args) throws IOException {
+                	    
 			try {
-                            
-                            String ficheroTemp, impresora;
+			    String ficheroTemp;
+                            String impresora;
                             String changelog = "";
-			    String build = "Build 20121021 ( Lola )";
+			    String build = "Build 20121028";
 			    String versionJR = "4.7.1";
 			    Boolean pdf,impDirecta, guardaTemporal;
 			    int nCopias, nParametrosJasper;
@@ -58,6 +65,7 @@ public class enebooreports {
 			    System.out.flush();// empties buffer, before you input text
 			    ficheroTemp =""; //Nombre fichero Temporal
           		    ficheroTemp = stdin.readLine();
+          		    enebooreports.ficheroTemp = ficheroTemp;
 			   start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
                             guardaTemporal = Boolean.parseBoolean(stdin.readLine());
@@ -115,25 +123,29 @@ public class enebooreports {
  				} while (!ficheroTemp.equals( "version" ));
                                         
 						
-			} catch (JRException e) {
-				JOptionPane.showMessageDialog(null, "Se ha producido un error (JRException) : \n " + e.toString(), "Eneboo Reports", 1);
-				e.printStackTrace();
-			}catch (SQLException e) {
-				JOptionPane.showMessageDialog(null, "Se ha producido un error (SQLException) : \n " + e.toString(), "Eneboo Reports", 1);
-				 e.printStackTrace();
-			}		
-			 catch (ClassNotFoundException e) {
-				JOptionPane.showMessageDialog(null, "Se ha producido un error (ClassNotFoundException) : \n " + e.toString(), "Eneboo Reports", 1);
-				 e.printStackTrace();
 			}
-			 catch (net.sf.jasperreports.engine.util.JRFontNotFoundException e) {
-				JOptionPane.showMessageDialog(null, "Se ha producido un error (JRFontNotFoundException) : \n " + e.toString(), "Eneboo Reports", 1);
-				 e.printStackTrace();
-			} 
-			 catch (Exception e) {
-			 if (!e.getMessage().equals("null"))  //Para que no muestre mensaje de error cuando se cierra el ejecutable 
-            		JOptionPane.showMessageDialog(null, "main :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
-	    e.printStackTrace();
+			catch (NumberFormatException e)
+					{
+			//No hacemos nada. Suele ser porque el ejecutable se ha cerrado		
+			}
+			catch (PSQLException e) {
+				crearLogError(e);				 
+			}
+			catch (SQLException e) {
+				crearLogError(e);					 
+			}		
+			catch (ClassNotFoundException e) {
+				crearLogError(e);
+			}
+			catch (net.sf.jasperreports.engine.util.JRFontNotFoundException e) {
+				crearLogError(e);
+			}
+			catch (JRException e) {
+				crearLogError(e);
+			}
+			catch (Exception e) {
+			 crearLogError(e);
+			       		
 		       }  
 		
 	}
@@ -207,5 +219,26 @@ public class enebooreports {
 		}catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "impresionDirecta :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
 	    e.printStackTrace();
-		       }  									}	
+		       }  									
+		       
+		  }
+		  
+	public static void crearLogError(Exception error) {
+		try
+		{
+			String ficheroError = enebooreports.ficheroTemp+ "_error.txt";
+			FileOutputStream fos = new FileOutputStream(ficheroError);
+			PrintStream ps = new PrintStream(fos); 
+	
+					error.printStackTrace(ps);  
+					JOptionPane.showMessageDialog(null, "Se ha producido un error : \n" + error.toString() + "\n\nConsulte " + ficheroError + " para más información \n ", "Eneboo Reports", 1);
+			
+	
+	 //if (!error.getMessage().equals("null"))  //Para que no muestre mensaje de error cuando se cierra el ejecutable 
+	
+	}catch (Exception e) {  
+            JOptionPane.showMessageDialog(null, "crearLogError :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
+	    e.printStackTrace();
+			     }  		
+	}
 }

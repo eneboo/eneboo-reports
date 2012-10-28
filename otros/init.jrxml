@@ -3,6 +3,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="ireport.callouts" value="##Fri Oct 26 22:58:23 CEST 2012"/>
 	<parameter name="VERSION" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="CHANGELOG" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="VERSIONJR" class="java.lang.String" isForPrompting="false"/>
@@ -48,7 +49,7 @@
 				<text><![CDATA[Adaptación realizada por José A. Fernández ( aullasistemas@gmail.com )]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="9cd97bc6-9bd4-4958-96af-d3256d709600" mode="Opaque" x="0" y="95" width="555" height="402" backcolor="#E9E9F3"/>
+				<reportElement uuid="9cd97bc6-9bd4-4958-96af-d3256d709600" mode="Opaque" x="0" y="74" width="555" height="402" backcolor="#E9E9F3"/>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$P{CHANGELOG}]]></textFieldExpression>
 			</textField>
