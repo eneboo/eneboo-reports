@@ -29,15 +29,14 @@ import org.postgresql.util.*;
 public class enebooreports {
  
 public static String ficheroTemp;
- 
+public static String build = "Build 20121030";
+public static String versionJR = "4.7.1";
                 public static void main(String[] args) throws IOException {
                 	    
 			try {
 			    String ficheroTemp;
                             String impresora;
                             String changelog = "";
-			    String build = "Build 20121028";
-			    String versionJR = "4.7.1";
 			    Boolean pdf,impDirecta, guardaTemporal;
 			    int nCopias, nParametrosJasper;
 			    long start;
@@ -65,8 +64,9 @@ public static String ficheroTemp;
 			    System.out.flush();// empties buffer, before you input text
 			    ficheroTemp =""; //Nombre fichero Temporal
           		    ficheroTemp = stdin.readLine();
-          		    enebooreports.ficheroTemp = ficheroTemp;
-			   start = System.currentTimeMillis(); /* Para controlar el tiempo */					
+			    if (ficheroTemp == null ) break;
+			    enebooreports.ficheroTemp = ficheroTemp;
+			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
                             guardaTemporal = Boolean.parseBoolean(stdin.readLine());
 		            pdf = false; // exporta a pdf
@@ -91,9 +91,9 @@ public static String ficheroTemp;
 						{
 						report = creditos;
 						guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
-						hm.put("VERSION", build);
+						hm.put("VERSION", enebooreports.build);
 						hm.put("CHANGELOG",listadoCompleto);
-						hm.put("VERSIONJR",versionJR);						
+						hm.put("VERSIONJR",enebooreports.versionJR);						
 						}
 					else {     
                           	       		if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
@@ -123,25 +123,6 @@ public static String ficheroTemp;
  				} while (!ficheroTemp.equals( "version" ));
                                         
 						
-			}
-			catch (NumberFormatException e)
-					{
-			//No hacemos nada. Suele ser porque el ejecutable se ha cerrado		
-			}
-			catch (PSQLException e) {
-				crearLogError(e);				 
-			}
-			catch (SQLException e) {
-				crearLogError(e);					 
-			}		
-			catch (ClassNotFoundException e) {
-				crearLogError(e);
-			}
-			catch (net.sf.jasperreports.engine.util.JRFontNotFoundException e) {
-				crearLogError(e);
-			}
-			catch (JRException e) {
-				crearLogError(e);
 			}
 			catch (Exception e) {
 			 crearLogError(e);
@@ -227,15 +208,21 @@ public static String ficheroTemp;
 	public static void crearLogError(Exception error) {
 		try
 		{
+			String cabecera;
 			String ficheroError = enebooreports.ficheroTemp+ "_error.txt";
-			FileOutputStream fos = new FileOutputStream(ficheroError);
-			PrintStream ps = new PrintStream(fos); 
-	
-					error.printStackTrace(ps);  
-					JOptionPane.showMessageDialog(null, "Se ha producido un error : \n" + error.toString() + "\n\nConsulte " + ficheroError + " para más información \n ", "Eneboo Reports", 1);
 			
+			///Generamos cabecera
+			cabecera = "\nEneboo Reports :\n\n* " + enebooreports.build + ".\n* Versión Jasper Reports " + enebooreports.versionJR + ".\n* Nombre fichero " + enebooreports.ficheroTemp + ".\n\n\n* StackTrace Java :\n";  	
+
 	
-	 //if (!error.getMessage().equals("null"))  //Para que no muestre mensaje de error cuando se cierra el ejecutable 
+			
+			FileOutputStream fos = new FileOutputStream(ficheroError);
+			PrintStream ps = new PrintStream(fos);
+			ps.printf(cabecera);
+			error.printStackTrace(ps);
+			ps.close();  
+			JOptionPane.showMessageDialog(null, "Se ha producido un error : \n" + error.toString() + "\n\nConsulte " + ficheroError + " para más información \n ", "Eneboo Reports", 1);
+
 	
 	}catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "crearLogError :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
