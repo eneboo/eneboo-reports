@@ -94,4 +94,19 @@ public static String calculaDC(String entidad, String sucursal, String n_cuenta)
         return dc;
     }
 
+ /**
+//fuente http://felinfo.blogspot.com.es/2010/12/calcular-la-letra-del-dni-con-java.html
+   Calcula la letra del DNI
+
+  @param dni  Cadena numérica.
+  @return     Letra.
+  */
+public static char calculaLetraDNI(int dni)
+    {
+    String juegoCaracteres="TRWAGMYFPDXBNJZSQVHLCKET";
+    int modulo= dni % 23;
+    char letra = juegoCaracteres.charAt(modulo);
+    return letra; 
+    } 
+
 }
