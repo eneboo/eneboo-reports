@@ -47,7 +47,11 @@ for ficheros in *.jar
 echo -e "\n* Generando enebooreports.jar"
 cd ..
 cp temp/*.class .
-jar -cmvf manifiesto.txt enebooreports.jar enebooreports.class Xpm.class otros/* >>/dev/null
+for ficheros in *.class
+  do
+  CLASSES+=" $ficheros"
+  done
+jar -cmvf manifiesto.txt enebooreports.jar$CLASSES otros/* >>/dev/null
 echo -e "\n* Generando EnebooReports.zip"
 zip EnebooReports.zip lib/* enebooreports.jar >> /dev/null
 echo -e "\n* Limpiando"
