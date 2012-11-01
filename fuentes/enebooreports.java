@@ -29,7 +29,7 @@ import org.postgresql.util.*;
 public class enebooreports {
  
 public static String ficheroTemp;
-public static String build = "Build 20121030";
+public static String build = "Build 20121101";
 public static String versionJR = "4.7.1";
                 public static void main(String[] args) throws IOException {
                 	    
