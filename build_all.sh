@@ -7,7 +7,6 @@ echo -e "(C) 2012 José A. Fernández Fernández <aullasistemas@gmail.com>\n"
 echo -e "\n* Copiando .jar necesarios para compilar en ./temp/"
 mkdir -p temp
 cp lib/jasperreports* temp
-cp lib/postgresql* temp
 
 echo -e "\n* Descomprimiendo .jar de ./temp/"
 cd temp

@@ -22,15 +22,14 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
-import org.postgresql.util.*;
 
 
 
 public class enebooreports {
  
 public static String ficheroTemp;
-public static String build = "Build 20121102";
-public static String versionJR = "4.7.1";
+public static String build = "Build 20121130";
+public static String versionJR = "5.0.0";
                 public static void main(String[] args) throws IOException {
                 	    
 			try {
