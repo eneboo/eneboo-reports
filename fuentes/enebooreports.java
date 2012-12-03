@@ -28,7 +28,7 @@ import net.sf.jasperreports.engine.data.JRXmlDataSource;
 public class enebooreports {
  
 public static String ficheroTemp;
-public static String build = "Build 20121130";
+public static String build = "Build 20121203";
 public static String versionJR = "5.0.0";
                 public static void main(String[] args) throws IOException {
                 	    
@@ -145,12 +145,11 @@ public static String versionJR = "5.0.0";
 									{
 							try {
 									JasperViewer viewer = new JasperViewer(print, false);
-                                    					//viewer.setSize(850, 500);
-									//viewer.setIconImage(new ImageIcon("elefante.gif").getImage()); //No lo coge
-									viewer.setAlwaysOnTop(true); //Siempre delante    
-									viewer.setTitle(print.getName() + " - Eneboo Reports"); 
+                                    					viewer.setTitle(print.getName() + " - Eneboo Reports"); 
 									viewer.setIconImage(new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo32.gif")).getImage());
 									viewer.setVisible(true);
+									viewer.setAlwaysOnTop(true);
+									viewer.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
 									viewer.setAlwaysOnTop(false); //Ahora no interesa estar siempre 
 								    	}
 					 catch (Exception e) {  
