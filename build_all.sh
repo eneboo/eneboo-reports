@@ -10,6 +10,7 @@ for jasperfile in lib/jasperreports-applet-*.jar
   done
 
 BUILD=$(date +%Y%m%d)
+NOMBREZIP="EnebooReports-$BUILDJASPER-$BUILD.zip"
 
 echo -e "\n\n Eneboo Reports Build: $BUILD \n Versión Jasper Library: $BUILDJASPER" 
 echo -e "\n* Copiando .jar necesarios para compilar en ./temp/"
@@ -28,6 +29,8 @@ for ficheros in *.jar
 cd ..
 echo -e "\n* Copiando ficheros .java en ./temp/"
 cp fuentes/*.java temp
+
+echo -e "\n* Generando version.java"
 
 echo -e "\n* Compilando ... "
 cd temp
@@ -78,8 +81,8 @@ for ficheros in *.class
   CLASSES+=" $ficheros"
   done
 jar -cmvf manifiesto.txt enebooreports.jar$CLASSES otros/* >>/dev/null
-echo -e "\n* Generando EnebooReports-JR_$BUILDJASPER-BUILD_$BUILD.zip"
-zip EnebooReports-JR_$BUILDJASPER-BUILD_$BUILD.zip lib/* enebooreports.jar >> /dev/null
+echo -e "\n* Generando $NOMBREZIP"
+zip $NOMBREZIP lib/* enebooreports.jar >> /dev/null
 echo -e "\n* Reponiendo enebooreports*.jar modificados"
 cd temp
 for ficheros in jasperreports*.jar
@@ -93,4 +96,4 @@ rm -Rfr temp
 rm -f *.class
 rm -f *.jar
 rm -f *.txt
-echo -e "\n\n¡¡ PROCESO TERMINADO !!\nEl fichero EnebooReports-JR_$BUILDJASPER-BUILD_$BUILD.zip está listo para distribuir."
+echo -e "\n\n¡¡ PROCESO TERMINADO !!\nEl fichero $NOMBREZIP está listo para ser distribuido.\n\n"
