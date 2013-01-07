@@ -31,6 +31,14 @@ echo -e "\n* Copiando ficheros .java en ./temp/"
 cp fuentes/*.java temp
 
 echo -e "\n* Generando version.java"
+echo "public class jrversion {" >> temp/jrversion.java
+echo "public static String jasper() {" >> temp/jrversion.java
+echo -e "return \"$BUILDJASPER\";" >> temp/jrversion.java
+echo "}" >> temp/jrversion.java
+echo "public static String eReports() {" >> temp/jrversion.java
+echo -e "return \"$BUILD\";" >> temp/jrversion.java
+echo "}" >> temp/jrversion.java
+echo "}" >> temp/jrversion.java
 
 echo -e "\n* Compilando ... "
 cd temp
@@ -75,6 +83,7 @@ cd ..
 cp temp/enebooreports.class .
 cp temp/ERUtil.class .
 cp temp/Xpm.class .
+cp temp/jrversion.class .
 
 for ficheros in *.class
   do
@@ -96,4 +105,5 @@ rm -Rfr temp
 rm -f *.class
 rm -f *.jar
 rm -f *.txt
+rm -f lib/*.tmp
 echo -e "\n\n¡¡ PROCESO TERMINADO !!\nEl fichero $NOMBREZIP está listo para ser distribuido.\n\n"

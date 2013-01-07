@@ -28,8 +28,8 @@ import net.sf.jasperreports.engine.data.JRXmlDataSource;
 public class enebooreports {
  
 public static String ficheroTemp;
-public static String build = "Build 20121203";
-public static String versionJR = "5.0.0";
+public static String build = "Build " + jrversion.eReports();
+public static String versionJR = jrversion.jasper();
                 public static void main(String[] args) throws IOException {
                 	    
 			try {
@@ -155,6 +155,7 @@ public static String versionJR = "5.0.0";
 					 catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "mostrarVisor :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
 	    e.printStackTrace();
+		crearLogError(e);
 		       }
 		       }  
 	
