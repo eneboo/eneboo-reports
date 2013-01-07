@@ -16,7 +16,6 @@ echo -e "\n\n Eneboo Reports Build: $BUILD \n Versión Jasper Library: $BUILDJAS
 echo -e "\n* Copiando .jar necesarios para compilar en ./temp/"
 mkdir -p temp
 cp lib/jasperreports* temp
-cp lib/common* temp
 
 echo -e "\n* Descomprimiendo .jar de ./temp/"
 cd temp
@@ -48,21 +47,6 @@ for ficheros in *.java
   javac $ficheros >> /dev/null
   done
 
-#mkdir net/sf/jasperreports/view
-
-
-
-echo -e "\n* Añadiendo modificaciones a JasperLibrary ..."
-
-for ficheros in ../lib/jasperreports*.jar
-  do
-  echo "- $ficheros"
-  cp SaveContributorUtils.class net/sf/jasperreports/view/SaveContributorUtils.class
-  jar -uf $ficheros net/sf/jasperreports/view/SaveContributorUtils.class 
-  cp JRViewer.class net/sf/jasperreports/view/JRViewer.class
-  jar -uf $ficheros net/sf/jasperreports/view/JRViewer.class 
-  done
-
 echo -e "\n* Generando manifiesto actualizado"
 cd ../lib
 PRIMERO="0"
@@ -92,16 +76,9 @@ for ficheros in *.class
 jar -cmvf manifiesto.txt enebooreports.jar$CLASSES otros/* >>/dev/null
 echo -e "\n* Generando $NOMBREZIP"
 zip $NOMBREZIP lib/* enebooreports.jar >> /dev/null
-echo -e "\n* Reponiendo enebooreports*.jar modificados"
-cd temp
-for ficheros in jasperreports*.jar
-  do
-  echo "- $ficheros"
-   cp -f $ficheros ../lib
-  done
-cd ..
+
 echo -e "\n* Limpiando"
-rm -Rfr temp
+rm -fr temp
 rm -f *.class
 rm -f *.jar
 rm -f *.txt
