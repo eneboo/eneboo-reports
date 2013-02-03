@@ -3,9 +3,9 @@ eneboo-reports
 
 eneboo-reports
 
-Última versión estable (5.0.0-20130118)
+Última versión estable (5.0.1-20130203)
 
-https://docs.google.com/uc?export=download&confirm=no_antivirus&id=0B0OvmE7WvNitSGhzYWl0cUoxcW8 
+https://docs.google.com/file/d/0B0OvmE7WvNitSHJVWmsyLWU2ek0/edit?usp=sharing 
 
 
 Consigue reports listos para usar en https://github.com/Aulla/reports4eneboo-reports

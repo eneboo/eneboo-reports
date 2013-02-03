@@ -1,7 +1,10 @@
+03/02/2013
+* JasperLibrary 5.0.1.
+* Funci&oacute;n de impresi&oacute;n directa mejorada. 
 18/01/2013
 * Se habilita el uso de Virtualizaci&oacute;n para trabajar con informes grandes.
 30/11/2012
-* Actualizado a JasperLibrary 5.0.0
+* JasperLibrary 5.0.0.
 02/11/2012
 * Nueva funci&oacute;n ERUtil.calculaLetraDNI(int dni):Char.
 01/11/2012
@@ -9,4 +12,4 @@
 28/10/2012
 * Control de errores mejorados. Se crea un fichero con el StackTrace, en ficheros_temp, cuando se produce un error.
 26/10/2012
-* Comienza Versi&oacute;n 2. La librería es un arbol de directorios que contiene los diferentes paquetes que la componen.La velocidad de ejecutación mejora considerablemente.
+* Comienza Versi&oacute;n 2.

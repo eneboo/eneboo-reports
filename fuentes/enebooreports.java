@@ -208,7 +208,7 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 						}
 				listadoImpresorasDisponibles += services[i].getName() + "\n";
 							}
-		if (listadoImpresorasDisponibles.equals("")) listadoImpresorasDisponibles = "No se han detectado impresroas en el sistema";
+		if (listadoImpresorasDisponibles.equals("")) listadoImpresorasDisponibles = "¡¡ Opppps !! . No se han detectado impresoras en el sistema";
 		if ( selectedService > -1) 
 			{
 			PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
