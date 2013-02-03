@@ -32,6 +32,8 @@ public class enebooreports {
 public static String ficheroTemp;
 public static String build = "Build " + jrversion.eReports();
 public static String versionJR = jrversion.jasper();
+public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
+
                 public static void main(String[] args) throws IOException {
                 	
                 	JRFileVirtualizer virtualizer = new JRFileVirtualizer(100, System.getProperty("java.io.tmpdir"));  //use virtualizer if required 
@@ -195,29 +197,34 @@ public static String versionJR = jrversion.jasper();
 		PrinterJob job = PrinterJob.getPrinterJob();
 		/* Create an array of PrintServices */
 		PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
-		int selectedService = 0;
+		int selectedService = -1;
+		String listadoImpresorasDisponibles = "";
 		/* Scan found services to see if anyone suits our needs */
 		for(int i = 0; i < services.length;i++){
-					if(services[i].getName().toUpperCase().contains(impresora)){
-					/*If the service is named as what we are querying we select it */
-					selectedService = i;
+				if(services[i].getName().contains(impresora))
+						{
+						job.setPrintService(services[i]);
+						selectedService = i;	
+						}
+				listadoImpresorasDisponibles += services[i].getName() + "\n";
 							}
-		job.setPrintService(services[selectedService]);
-		PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
-		MediaSizeName mediaSizeName = MediaSize.findMedia(4,4,MediaPrintableArea.INCH);
-		printRequestAttributeSet.add(mediaSizeName);
-		printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
-		JRPrintServiceExporter exporter;
-		exporter = new JRPrintServiceExporter();
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
-		/* We set the selected service and pass it as a paramenter */
-		exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, services[selectedService]);
-		exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, services[selectedService].getAttributes());
-		exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
-		exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
-		exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.TRUE);
-		exporter.exportReport();
-							} 
+		if (listadoImpresorasDisponibles.equals("")) listadoImpresorasDisponibles = "No se han detectado impresroas en el sistema";
+		if ( selectedService > -1) 
+			{
+			PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
+			//MediaSizeName mediaSizeName = MediaSize.findMedia(4,4,MediaPrintableArea.INCH);
+			//printRequestAttributeSet.add(mediaSizeName);
+			printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
+			exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+			/* We set the selected service and pass it as a paramenter */
+			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, services[selectedService]);
+			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, services[selectedService].getAttributes());
+			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
+			exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
+			exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
+					
+			exporter.exportReport();
+			} else JOptionPane.showMessageDialog(null, "Eneboo Reports :: impresionDirecta :: No existe la impresora especificaca : ( " + impresora + " ).\n\nEspecifique alguna de las siguientes impresoras :\n" + listadoImpresorasDisponibles , "Eneboo Reports", 1);
 						
 		}catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "impresionDirecta :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
