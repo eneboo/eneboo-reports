@@ -90,7 +90,7 @@ public static String calculaDC(String entidad, String sucursal, String n_cuenta)
             dc2 = String.valueOf(calculo1);
         }
 	calculo=0;
-        dc=String.valueOf(dc1)+String.valueOf(dc1);
+        dc=String.valueOf(dc1)+String.valueOf(dc2);
         return dc;
     }
 
