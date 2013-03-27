@@ -22,9 +22,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
-import net.sf.jasperreports.engine.fill.*; //for virtualizers
-import net.sf.jasperreports.engine.util.*; //for jrswapfile
-import net.sf.jasperreports.engine.JRParameter;
+
 
 
 public class enebooreports {
@@ -35,16 +33,8 @@ public static String versionJR = jrversion.jasper();
 public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 
                 public static void main(String[] args) throws IOException {
-                	
-                	JRFileVirtualizer virtualizer = new JRFileVirtualizer(100, System.getProperty("java.io.tmpdir"));  //use virtualizer if required 
-                	  
+                	    
 			try {
-			                       			   
-                           			    
-                    	   
-                           
-                           
-				
 			    String ficheroTemp;
                             String impresora;
                             String changelog = "";
@@ -67,12 +57,11 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
       				        			    }  
 
    
-                            
+                            Connection conn = DriverManager.getConnection(args[1],args[2],args[3]);
                             //JOptionPane.showMessageDialog(null, "Init finalizado" , "Eneboo Reports", 1);
 			    do
                               {
-    
-                           BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
+                            BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
 			    System.out.flush();// empties buffer, before you input text
 			    ficheroTemp =""; //Nombre fichero Temporal
           		    ficheroTemp = stdin.readLine();
@@ -105,8 +94,7 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 						guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
 						hm.put("VERSION", enebooreports.build);
 						hm.put("CHANGELOG",listadoCompleto);
-						hm.put("VERSIONJR",enebooreports.versionJR);
-												
+						hm.put("VERSIONJR",enebooreports.versionJR);						
 						}
 					else {     
                           	       		if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
@@ -118,20 +106,12 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
                          				  if(!parametroValor[j].equals( "") && !parametroNombre[j].equals( ""))
 	 						 		hm.put(parametroNombre[j], parametroValor[j]); //Seteamos Parametros en mapa
 					      }
-					      
-					hm.put(JRParameter.REPORT_VIRTUALIZER, virtualizer); //Añadimos PARAMETRO VIRTUALIZER
-					Connection conn = DriverManager.getConnection(args[1],args[2],args[3]);
+						 
 					JasperPrint print = JasperFillManager.fillReport(report, hm, conn); //Rellenamos el report compilado
-					conn.close();
-					virtualizer.setReadOnly(true);
-							     
 					if (impDirecta) impresionDirecta( impresora, nCopias, print );
 							else
 					 		if(pdf) JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
 								          else mostrarVisor( print, build, start);
-								          
-				//clean up
-				virtualizer.cleanup();
 							  	       
 				if (!guardaTemporal)
 						{
@@ -140,14 +120,12 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
                                          		JOptionPane.showMessageDialog(null, "El fichero Temporal " + ficheroTemp + " no se puede borrar." , "Eneboo Reports", 1);
 						}
 					  
-				
-								
+					
  				} while (!ficheroTemp.equals( "version" ));
                                         
 						
 			}
 			catch (Exception e) {
-			 virtualizer.cleanup(); //Limpiamos temporales
 			 crearLogError(e);
 			       		
 		       }  
