@@ -153,6 +153,8 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 									viewer.setAlwaysOnTop(true);
 									viewer.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
 									viewer.setAlwaysOnTop(false); //Ahora no interesa estar siempre 
+									while (viewer.isActive()) 
+										   Thread.sleep(500);	//Esperamos a que el visor se cierre								   
 								    	}
 					 catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "mostrarVisor :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
