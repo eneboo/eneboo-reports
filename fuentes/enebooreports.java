@@ -111,7 +111,8 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 					if (impDirecta) impresionDirecta( impresora, nCopias, print );
 							else
 					 		if(pdf) JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
-								          else mostrarVisor( print, build, start);
+								          else if (!mostrarVisor( print, build))
+								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
 							  	       
 				if (!guardaTemporal)
 						{
@@ -143,7 +144,7 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 	
 	
 	
-	public static void mostrarVisor(JasperPrint print, String build, long start) 
+	public static Boolean mostrarVisor(JasperPrint print, String build) 
 									{
 							try {
 									JasperViewer viewer = new JasperViewer(print, false);
@@ -154,12 +155,14 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 									viewer.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
 									viewer.setAlwaysOnTop(false); //Ahora no interesa estar siempre 
 									while (viewer.isActive()) 
-										   Thread.sleep(500);	//Esperamos a que el visor se cierre								   
+										   Thread.sleep(500);	//Esperamos a que el visor se cierre
+									return true;							   
 								    	}
 					 catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "mostrarVisor :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
 	    e.printStackTrace();
 		crearLogError(e);
+		return false;
 		       }
 		       }  
 	
