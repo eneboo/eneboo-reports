@@ -68,6 +68,7 @@ cp temp/enebooreports.class .
 cp temp/ERUtil.class .
 cp temp/Xpm.class .
 cp temp/jrversion.class .
+cp temp/aSplash.class .
 
 for ficheros in *.class
   do

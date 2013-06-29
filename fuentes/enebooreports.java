@@ -35,6 +35,8 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
                 public static void main(String[] args) throws IOException {
                 	    
 			try {
+			    aSplash splash = new aSplash(); //Inicializamos el splash.
+			    splash.setVisible(true); //Mostramos splash
 			    String ficheroTemp;
                             String impresora;
                             String changelog = "";
@@ -66,6 +68,7 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 			    ficheroTemp =""; //Nombre fichero Temporal
           		    ficheroTemp = stdin.readLine();
 			    if (ficheroTemp == null ) break;
+			    splash.setVisible(true); //Si el break anterior no cierra la libreria , mostramos splash.
 			    enebooreports.ficheroTemp = ficheroTemp;
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
@@ -108,11 +111,23 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 					      }
 						 
 					JasperPrint print = JasperFillManager.fillReport(report, hm, conn); //Rellenamos el report compilado
-					if (impDirecta) impresionDirecta( impresora, nCopias, print );
+					if (impDirecta) 
+							{
+							impresionDirecta( impresora, nCopias, print );
+							splash.setVisible(false);
+							}
 							else
-					 		if(pdf) JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
-								          else if (!mostrarVisor( print, build))
+					 		if(pdf) 
+					 			{
+					 			JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
+								splash.setVisible(false);
+								}
+								          else
+								          	{
+								          	splash.setVisible(false);	
+								          	if (!mostrarVisor( print, build))
 								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
+								          	}
 							  	       
 				if (!guardaTemporal)
 						{
@@ -124,7 +139,7 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 					
  				} while (!ficheroTemp.equals( "version" ));
                                         
-						
+			splash.dispose();			
 			}
 			catch (Exception e) {
 			 crearLogError(e);
