@@ -16,7 +16,7 @@ echo -e "\n\n Eneboo Reports Build: $BUILD \n Versión Jasper Library: $BUILDJAS
 echo -e "\n* Copiando .jar necesarios para compilar en ./temp/"
 mkdir -p temp
 cp lib/jasperreports* temp
-
+cp lib/commons* temp 
 echo -e "\n* Descomprimiendo .jar de ./temp/"
 cd temp
 for ficheros in *.jar
@@ -29,7 +29,7 @@ cd ..
 echo -e "\n* Copiando ficheros .java en ./temp/"
 cp fuentes/*.java temp
 
-echo -e "\n* Generando version.java"
+echo -e "\n* Generando jrversion.java"
 echo "public class jrversion {" >> temp/jrversion.java
 echo "public static String jasper() {" >> temp/jrversion.java
 echo -e "return \"$BUILDJASPER\";" >> temp/jrversion.java
@@ -44,8 +44,15 @@ cd temp
 for ficheros in *.java
   do
   echo "- $ficheros"
-  javac $ficheros >> /dev/null
+  javac -classpath ../lib:../temp $ficheros >> /dev/null
   done
+  
+echo -e "\n* Sustituyendo clases"
+#saveContributorUtils
+RUTACLASE="net/sf/jasperreports/view"
+cp SaveContributorUtils.class $RUTACLASE/SaveContributorUtils.class
+jar uvf ../lib/jasperreports-$BUILDJASPER.jar $RUTACLASE/SaveContributorUtils.class
+
 
 echo -e "\n* Generando manifiesto actualizado"
 cd ../lib
@@ -68,7 +75,7 @@ cp temp/enebooreports.class .
 cp temp/ERUtil.class .
 cp temp/Xpm.class .
 cp temp/jrversion.class .
-cp temp/aSplash.class .
+cp temp/splash.class .
 
 for ficheros in *.class
   do
@@ -79,7 +86,7 @@ echo -e "\n* Generando $NOMBREZIP"
 zip $NOMBREZIP lib/* enebooreports.jar >> /dev/null
 
 echo -e "\n* Limpiando"
-rm -fr temp
+rm -frR temp
 rm -f *.class
 rm -f *.jar
 rm -f *.txt

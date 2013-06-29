@@ -35,8 +35,8 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
                 public static void main(String[] args) throws IOException {
                 	    
 			try {
-			    aSplash splash = new aSplash(); //Inicializamos el splash.
-			    splash.setVisible(true); //Mostramos splash
+			    splash splash = new splash(); //Inicializamos el splash.
+			    splash.mostrar(); //Mostramos splash
 			    String ficheroTemp;
                             String impresora;
                             String changelog = "";
@@ -68,7 +68,7 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 			    ficheroTemp =""; //Nombre fichero Temporal
           		    ficheroTemp = stdin.readLine();
 			    if (ficheroTemp == null ) break;
-			    splash.setVisible(true); //Si el break anterior no cierra la libreria , mostramos splash.
+			    splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
 			    enebooreports.ficheroTemp = ficheroTemp;
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
@@ -114,17 +114,17 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 					if (impDirecta) 
 							{
 							impresionDirecta( impresora, nCopias, print );
-							splash.setVisible(false);
+							splash.ocultar();
 							}
 							else
 					 		if(pdf) 
 					 			{
 					 			JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
-								splash.setVisible(false);
+								splash.ocultar();
 								}
 								          else
 								          	{
-								          	splash.setVisible(false);	
+								          	splash.ocultar();	
 								          	if (!mostrarVisor( print, build))
 								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
 								          	}
@@ -137,9 +137,7 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 						}
 					  
 					
- 				} while (!ficheroTemp.equals( "version" ));
-                                        
-			splash.dispose();			
+ 				} while (!ficheroTemp.equals( "version" ));			
 			}
 			catch (Exception e) {
 			 crearLogError(e);
