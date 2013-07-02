@@ -167,8 +167,9 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 									viewer.setAlwaysOnTop(true);
 									viewer.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
 									viewer.setAlwaysOnTop(false); //Ahora no interesa estar siempre 
-									while (viewer.isActive()) 
+									while (viewer.isShowing()) 
 										   Thread.sleep(500);	//Esperamos a que el visor se cierre
+									viewer.dispose();
 									return true;							   
 								    	}
 					 catch (Exception e) {  
