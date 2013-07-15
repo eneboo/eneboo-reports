@@ -26,5 +26,9 @@ public class splash extends JWindow {
     public void ocultar() {
     setVisible(false);
     }
+    
+    public void cerrar() {
+    dispose();
+    }
 
 }

@@ -3,9 +3,9 @@ eneboo-reports
 
 eneboo-reports
 
-Última versión estable (5.1.2-20130702)
+Última versión estable (5.1.2-20130715)
 
-https://docs.google.com/file/d/0B0OvmE7WvNitYk9yZ1NFMndGdms/edit?usp=sharing
+https://docs.google.com/file/d/0B0OvmE7WvNitN3hwdktyYTQ1OWc/edit?usp=sharing
 
 
 

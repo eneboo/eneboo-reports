@@ -31,11 +31,9 @@ public static String ficheroTemp;
 public static String build = "Build " + jrversion.eReports();
 public static String versionJR = jrversion.jasper();
 public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
-
-                public static void main(String[] args) throws IOException {
-                	    
+public static splash splash = new splash();
+                public static void main(String[] args) throws IOException {     
 			try {
-			    splash splash = new splash(); //Inicializamos el splash.
 			    splash.mostrar(); //Mostramos splash
 			    String ficheroTemp;
                             String impresora;
@@ -137,11 +135,12 @@ public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 						}
 					  
 					
- 				} while (!ficheroTemp.equals( "version" ));			
+ 				} while (!ficheroTemp.equals( "version" ));
+ 			splash.cerrar(); //Eliminamos la instancia del splash		
 			}
 			catch (Exception e) {
-			 crearLogError(e);
-			       		
+			 splash.cerrar(); //Eliminamos la instancia del splash
+			 crearLogError(e);       		
 		       }  
 		
 	}
