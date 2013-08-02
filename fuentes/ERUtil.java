@@ -1,3 +1,12 @@
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.sql.*;
+
 public class ERUtil {
 
 
@@ -108,5 +117,68 @@ public static char calculaLetraDNI(int dni)
     char letra = juegoCaracteres.charAt(modulo);
     return letra; 
     } 
+
+public static Image XpmToImage(String xpm)
+    {
+    Xpm conversor = new Xpm();
+    Image resultado = conversor.XpmToImage(xpm);
+    conversor = null;
+    return resultado;
+    }
+
+/**
+@param destFile	Nombre del fichero sin extensión
+@param data	Contenido del Xpm en bruto
+*/
+public static String XpmToFile(String destFile)
+	{
+	String data="";
+	String qry="";
+	String destFileFinal = new File ("../../temp_files/images/").getAbsolutePath () +"/"+ destFile+".jpeg";
+	String rutaDirImages = new File("../../temp_files/images/").getAbsolutePath ();
+	File fichero = new File(destFileFinal);
+	if (fichero.exists())
+		return destFileFinal;
+	//Comprobamos que la carpeta existe
+	File folder = new File(rutaDirImages);
+	if (!folder.exists()) 
+		folder.mkdir();
+	
+	Xpm conversor = new Xpm();
+	try {
+	//if (enebooreports.driverSQL.equals("org.postgresql.Driver"))
+	qry = "SELECT contenido FROM fllarge WHERE fllarge.refkey = '"+ destFile +"'" ; //En principio es la misma consulta en MySQL y PostgreSQL
+	Connection conn = enebooreports.conn;
+	//JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: 1." , "Eneboo Reports", 1);
+	Statement stmt = conn.createStatement();
+	//JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: 2." , "Eneboo Reports", 1);
+	ResultSet rs = stmt.executeQuery(qry); 
+	if (rs.next())
+		data = rs.getString("contenido");
+	else
+		{
+		JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: retornando nulo" , "Eneboo Reports", 1);
+		return null;
+		}
+	
+	}
+   	 catch (SQLException e)
+    		{
+		enebooreports.crearLogError(e);
+   		 }
+
+	Image imgData = conversor.XpmToImage(data);
+    	BufferedImage bfImage = new BufferedImage(imgData.getWidth(null), imgData.getHeight(null), BufferedImage.TYPE_INT_RGB);
+    	bfImage.getGraphics().drawImage(imgData, 0, 0, null);
+    	try {
+        
+		ImageIO.write(bfImage, "jpg",new File(destFileFinal));  	     
+        } catch (IOException e) {
+        enebooreports.crearLogError(e);
+        }
+	conversor=null;
+	return destFileFinal;
+	}
+    
 
 }

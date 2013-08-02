@@ -28,6 +28,8 @@ import net.sf.jasperreports.engine.data.JRXmlDataSource;
 public class enebooreports {
  
 public static String ficheroTemp;
+public static Connection conn;
+//public static String driverSQL;
 public static String build = "Build " + jrversion.eReports();
 public static String versionJR = jrversion.jasper();
 public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
@@ -56,8 +58,8 @@ public static splash splash = new splash();
         							 listadoCompleto = listadoCompleto + line + "<br>";
       				        			    }  
 
-   
-                            Connection conn = DriverManager.getConnection(args[1],args[2],args[3]);
+   			   // enebooreports.driverSQL = args[1];
+                            enebooreports.conn = DriverManager.getConnection(args[1],args[2],args[3]);
                             //JOptionPane.showMessageDialog(null, "Init finalizado" , "Eneboo Reports", 1);
 			    do
                               {
@@ -108,7 +110,7 @@ public static splash splash = new splash();
 	 						 		hm.put(parametroNombre[j], parametroValor[j]); //Seteamos Parametros en mapa
 					      }
 						 
-					JasperPrint print = JasperFillManager.fillReport(report, hm, conn); //Rellenamos el report compilado
+					JasperPrint print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
 					if (impDirecta) 
 							{
 							impresionDirecta( impresora, nCopias, print );
@@ -233,7 +235,8 @@ public static splash splash = new splash();
 		try
 		{
 			String cabecera;
-			String ficheroError = enebooreports.ficheroTemp+ "_error.txt";
+			long tiempo = System.currentTimeMillis();
+			String ficheroError = enebooreports.ficheroTemp+"_"+ tiempo + "_error.txt";
 			
 			///Generamos cabecera
 			cabecera = "\nEneboo Reports :\n\n* " + enebooreports.build + ".\n* Versión Jasper Reports " + enebooreports.versionJR + ".\n* Nombre fichero " + enebooreports.ficheroTemp + ".\n\n\n* StackTrace Java :\n";  	
