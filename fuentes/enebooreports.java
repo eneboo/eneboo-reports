@@ -40,6 +40,7 @@ public static splash splash = new splash();
 			    String ficheroTemp;
                             String impresora;
                             String changelog = "";
+                            Image img;
 			    Boolean pdf,impDirecta, guardaTemporal;
 			    int nCopias, nParametrosJasper;
 			    long start;
@@ -51,6 +52,26 @@ public static splash splash = new splash();
 
 			    // Cargamos changelog
 			    InputStream chl = enebooreports.class.getResourceAsStream("/otros/changelog");
+			    
+			    
+			    PopupMenu popMenu= new PopupMenu();
+ 			    //MenuItem salir = new MenuItem("Salir");
+ 			    //popMenu.add(salir);
+ 			    
+ 			    if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0)
+ 			    	{
+  	                    	img = new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo16.gif")).getImage();
+  	                    	}
+  	                    	else
+  	                    	{
+  	                    	img = new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo24.gif")).getImage();
+  	                    	}
+ 	                   TrayIcon trayIcon = new TrayIcon(img, "Eneboo Reports", popMenu);
+ 	                   SystemTray.getSystemTray().add(trayIcon);
+ 	                               
+ 	                   
+
+			    
      			    BufferedReader br2 = new BufferedReader(new InputStreamReader(chl));
      			    String line= null;
      			    String listadoCompleto = "";
@@ -59,6 +80,8 @@ public static splash splash = new splash();
       				        			    }  
 
    			   // enebooreports.driverSQL = args[1];
+   			   if (enebooreports.conn != null) //Si existe,cerramos la conexión previa
+           			enebooreports.conn.close();
                             enebooreports.conn = DriverManager.getConnection(args[1],args[2],args[3]);
                             //JOptionPane.showMessageDialog(null, "Init finalizado" , "Eneboo Reports", 1);
 			    do
@@ -67,7 +90,8 @@ public static splash splash = new splash();
 			    System.out.flush();// empties buffer, before you input text
 			    ficheroTemp =""; //Nombre fichero Temporal
           		    ficheroTemp = stdin.readLine();
-			    if (ficheroTemp == null ) break;
+			    if (ficheroTemp == null ) System.exit(0);
+			    
 			    splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
 			    enebooreports.ficheroTemp = ficheroTemp;
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
@@ -124,21 +148,20 @@ public static splash splash = new splash();
 								}
 								          else
 								          	{
-								          	splash.ocultar();	
+								          	splash.ocultar();
+								          	//java.awt.Toolkit.getDefaultToolkit().beep();
 								          	if (!mostrarVisor( print, build))
 								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
-								          	}
-							  	       
+								          	}		  	       
 				if (!guardaTemporal)
 						{
                                    		File ficheroT = new File(ficheroTemp);
                                     		if (!ficheroT.delete())
                                          		JOptionPane.showMessageDialog(null, "El fichero Temporal " + ficheroTemp + " no se puede borrar." , "Eneboo Reports", 1);
 						}
-					  
-					
  				} while (!ficheroTemp.equals( "version" ));
- 			splash.cerrar(); //Eliminamos la instancia del splash		
+ 			splash.cerrar(); //Eliminamos la instancia del splash	
+ 			System.exit(0);
 			}
 			catch (Exception e) {
 			 splash.cerrar(); //Eliminamos la instancia del splash
@@ -156,8 +179,6 @@ public static splash splash = new splash();
 	
 	
 	
-	
-	
 	public static Boolean mostrarVisor(JasperPrint print, String build) 
 									{
 							try {
@@ -165,13 +186,20 @@ public static splash splash = new splash();
                                     					viewer.setTitle(print.getName() + " - Eneboo Reports"); 
 									viewer.setIconImage(new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo32.gif")).getImage());
 									viewer.setVisible(true);
-									viewer.setAlwaysOnTop(true);
-									viewer.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
-									viewer.setAlwaysOnTop(false); //Ahora no interesa estar siempre 
-									while (viewer.isShowing()) 
-										   Thread.sleep(500);	//Esperamos a que el visor se cierre
-									viewer.dispose();
-									return true;							   
+									try {
+										viewer.setAlwaysOnTop(true);
+										viewer.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+										viewer.setAlwaysOnTop(false); //Ahora no interesa estar siempre 
+										while (viewer.isShowing())
+										  	Thread.sleep(500);	//Esperamos a que el visor se cierre
+										//viewer.dispose();
+										
+									 } finally
+										{
+										//java.awt.Toolkit.getDefaultToolkit().beep();
+										//viewer.dispose();
+										return true;
+										}							   
 								    	}
 					 catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "mostrarVisor :: Se ha producido un error (Exception) : \n " + e.toString() , "Eneboo Reports", 1);
@@ -254,6 +282,8 @@ public static splash splash = new splash();
 	}catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "crearLogError :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
 	    e.printStackTrace();
-			     }  		
+			     }
+	System.exit(1);  		
 	}
+
 }

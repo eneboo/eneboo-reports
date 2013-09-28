@@ -180,5 +180,21 @@ public static String XpmToFile(String destFile)
 	return destFileFinal;
 	}
     
-
+public static String ocultaTexto(int inicio, int longitud, String texto, String caracter)
+	{
+	String nuevoTexto= "";
+	if (inicio < 0 ) inicio = 0;
+	int longitudTexto = texto.length();
+	int finOculto = inicio + longitud;
+	if (finOculto > longitudTexto) 
+		finOculto = longitudTexto;
+	for (int i=0; i<longitudTexto; i++){
+		if (i >= inicio && i < finOculto)
+			nuevoTexto = nuevoTexto + caracter;
+		else
+			nuevoTexto = nuevoTexto + texto.charAt(i);
+	}
+	//Vemos la longitud del texto
+	return nuevoTexto;
+	}
 }
