@@ -32,7 +32,6 @@ public static Connection conn;
 //public static String driverSQL;
 public static String build = "Build " + jrversion.eReports();
 public static String versionJR = jrversion.jasper();
-public static JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 public static splash splash = new splash();
                 public static void main(String[] args) throws IOException {     
 			try {
@@ -217,7 +216,7 @@ public static splash splash = new splash();
 	
 		try
 		{
-		
+		JRPrintServiceExporter exporter = new JRPrintServiceExporter();
 		//Aqui imprimimos directamente en var impresora...
 		//JasperPrint print = JasperFillManager.fillReport( this.class.getResource("/classpath/yourReport.jasper").getPath(), new HashMap(), new yourReportDataSource());
 		PrinterJob job = PrinterJob.getPrinterJob();
@@ -250,6 +249,7 @@ public static splash splash = new splash();
 			exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
 					
 			exporter.exportReport();
+			exporter = null;
 			} else JOptionPane.showMessageDialog(null, "Eneboo Reports :: impresionDirecta :: No existe la impresora especificaca : ( " + impresora + " ).\n\nEspecifique alguna de las siguientes impresoras :\n" + listadoImpresorasDisponibles , "Eneboo Reports", 1);
 						
 		}catch (Exception e) {  
