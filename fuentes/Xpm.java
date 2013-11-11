@@ -1690,6 +1690,9 @@ public class Xpm
 		if(parseend==-1){
 			return null;
 		}
+		//-> Aulla: Solo cogemos un numero para charsperpixel y asi evitamos posible espacio en blanco al final.
+		parseend = parse+1;
+		//
 		charsperpixel=Integer.parseInt(xpm.substring(parse,parseend));
 
 		debug("width="+width+",height="+height+
