@@ -54,20 +54,20 @@ public static splash splash = new splash();
 			    InputStream chl = enebooreports.class.getResourceAsStream("/otros/changelog");
 			    
 			    
-			    PopupMenu popMenu= new PopupMenu();
+			    //PopupMenu popMenu= new PopupMenu();
  			    //MenuItem salir = new MenuItem("Salir");
  			    //popMenu.add(salir);
  			    
- 			    if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0)
- 			    	{
-  	                    	img = new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo16.gif")).getImage();
-  	                    	}
-  	                    	else
-  	                    	{
-  	                    	img = new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo24.gif")).getImage();
-  	                    	}
- 	                   TrayIcon trayIcon = new TrayIcon(img, "Eneboo Reports", popMenu);
- 	                   SystemTray.getSystemTray().add(trayIcon);
+ 			    //if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0)
+ 			    //	{
+  	                    //	img = new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo16.gif")).getImage();
+  	                    //	}
+  	                    //	else
+  	                    //	{
+  	                    //	img = new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo24.gif")).getImage();
+  	                    //	}
+ 	                   //TrayIcon trayIcon = new TrayIcon(img, "Eneboo Reports", popMenu);
+ 	                   //SystemTray.getSystemTray().add(trayIcon);
  	                               
  	                   
 

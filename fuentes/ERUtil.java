@@ -157,7 +157,6 @@ public static String XpmToFile(String destFile)
 		data = rs.getString("contenido");
 	else
 		{
-		JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: retornando nulo" , "Eneboo Reports", 1);
 		return null;
 		}
 	
@@ -166,7 +165,6 @@ public static String XpmToFile(String destFile)
     		{
 		enebooreports.crearLogError(e);
    		 }
-
 	Image imgData = conversor.XpmToImage(data);
     	BufferedImage bfImage = new BufferedImage(imgData.getWidth(null), imgData.getHeight(null), BufferedImage.TYPE_INT_RGB);
     	bfImage.getGraphics().drawImage(imgData, 0, 0, null);
