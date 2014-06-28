@@ -6,6 +6,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.sql.*;
+import com.google.zxing.*;
 
 public class ERUtil {
 
@@ -124,6 +125,11 @@ public static Image XpmToImage(String xpm)
     Image resultado = conversor.XpmToImage(xpm);
     conversor = null;
     return resultado;
+    }
+
+public static Image StringToQR(String texto) throws Exception { 
+    return com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
+     new com.google.zxing.qrcode.QRCodeWriter().encode(texto,com.google.zxing.BarcodeFormat.QR_CODE, 300, 300));
     }
 
 /**

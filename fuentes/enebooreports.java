@@ -38,7 +38,7 @@ public static splash splash = new splash();
 			    splash.mostrar(); //Mostramos splash
 			    String ficheroTemp;
                             String impresora;
-                            String changelog = "";
+                           // String changelog = "";
                             Image img;
 			    Boolean pdf,impDirecta, guardaTemporal;
 			    int nCopias, nParametrosJasper;
@@ -50,7 +50,7 @@ public static splash splash = new splash();
 			    JasperReport report = creditos;
 
 			    // Cargamos changelog
-			    InputStream chl = enebooreports.class.getResourceAsStream("/otros/changelog");
+			   // InputStream chl = enebooreports.class.getResourceAsStream("/otros/changelog");
 			    
 			    
 			    //PopupMenu popMenu= new PopupMenu();
@@ -71,12 +71,12 @@ public static splash splash = new splash();
  	                   
 
 			    
-     			    BufferedReader br2 = new BufferedReader(new InputStreamReader(chl));
-     			    String line= null;
-     			    String listadoCompleto = "";
-     			    while (null != (line = br2.readLine())) {
-        							 listadoCompleto = listadoCompleto + line + "<br>";
-      				        			    }  
+     			   // BufferedReader br2 = new BufferedReader(new InputStreamReader(chl));
+     			   // String line= null;
+     			   // String listadoCompleto = "";
+     			   // while (null != (line = br2.readLine())) {
+        		   //					 listadoCompleto = listadoCompleto + line + "<br>";
+      			   //	        			    }  
 
    			   // enebooreports.driverSQL = args[1];
    			   if (enebooreports.conn != null) //Si existe,cerramos la conexión previa
@@ -119,7 +119,7 @@ public static splash splash = new splash();
 						report = creditos;
 						guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
 						hm.put("VERSION", enebooreports.build);
-						hm.put("CHANGELOG",listadoCompleto);
+						//hm.put("CHANGELOG",listadoCompleto);
 						hm.put("VERSIONJR",enebooreports.versionJR);						
 						}
 					else {     
