@@ -3,9 +3,9 @@ clear
 echo -e "\nUtilidad de empaquetado de librería Eneboo Reports y dependencias"
 echo -e "(C) 2012 José A. Fernández Fernández <aullasistemas@gmail.com>\n"
 
-for jasperfile in lib/jasperreports-applet-*.jar
+for jasperfile in lib/jasperreports-fonts-*.jar
   do
-    BUILDJASPER="${jasperfile#lib/jasperreports-applet-}"
+    BUILDJASPER="${jasperfile#lib/jasperreports-fonts-}"
     BUILDJASPER="${BUILDJASPER/.jar/}"
   done
 
