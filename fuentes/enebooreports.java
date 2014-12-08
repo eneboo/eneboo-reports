@@ -130,7 +130,16 @@ public static splash splash = new splash();
 
 	                                       for(int j = 0; j < nParametrosJasper; j++ )
                          				  if(!parametroValor[j].equals( "") && !parametroNombre[j].equals( ""))
-	 						 		hm.put(parametroNombre[j], parametroValor[j]); //Seteamos Parametros en mapa
+                         				  	{
+	 						 		if (parametroNombre[j].equals("REPORT_LOCALE"))
+	 						 				{
+	 						 				hm.put(parametroNombre[j],new java.util.Locale(parametroValor[j]));
+	 						 				}
+	 						 			else
+	 						 				{
+	 						 				hm.put(parametroNombre[j], parametroValor[j]); //Seteamos Parametros en mapa
+	 						 				}
+					      			}
 					      }
 						 
 					JasperPrint print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
