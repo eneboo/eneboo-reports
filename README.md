@@ -3,9 +3,9 @@ eneboo-reports
 
 eneboo-reports
 
-Última versión estable (5.6.0.-20140628)
+Última versión estable (6.0.0-20141208)
 
-https://drive.google.com/file/d/0B0OvmE7WvNitZ0x0U09ZYTRZd1k/edit?usp=sharing
+http://www.eneboo.org/pub/contrib/eneboo_reports/EnebooReports-6.0.0-20141208.zip
 
 
 
