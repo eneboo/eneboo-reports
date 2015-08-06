@@ -97,6 +97,7 @@ public static splash splash = new splash();
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
                             modoCloud = false;
+                            cloudFolder = "";
                             guardaTemporal = Boolean.parseBoolean(stdin.readLine());
 		            pdf = false; // exporta a pdf
                             pdf = Boolean.parseBoolean(stdin.readLine());
