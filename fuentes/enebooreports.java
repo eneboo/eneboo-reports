@@ -22,6 +22,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
+import org.apache.commons.codec.digest.DigestUtils;
 
 
 
@@ -37,10 +38,10 @@ public static splash splash = new splash();
 			try {
 			    splash.mostrar(); //Mostramos splash
 			    String ficheroTemp;
-                            String impresora;
+                            String impresora, cloudFolder;
                            // String changelog = "";
                             Image img;
-			    Boolean pdf,impDirecta, guardaTemporal;
+			    Boolean pdf,impDirecta, guardaTemporal, modoCloud;
 			    int nCopias, nParametrosJasper;
 			    long start;
 			    Class.forName(args[0]);
@@ -95,6 +96,7 @@ public static splash splash = new splash();
 			    enebooreports.ficheroTemp = ficheroTemp;
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
+                            modoCloud = false;
                             guardaTemporal = Boolean.parseBoolean(stdin.readLine());
 		            pdf = false; // exporta a pdf
                             pdf = Boolean.parseBoolean(stdin.readLine());
@@ -139,9 +141,24 @@ public static splash splash = new splash();
 	 						 				{
 	 						 				hm.put(parametroNombre[j], parametroValor[j]); //Seteamos Parametros en mapa
 	 						 				}
+					      			if(parametroNombre[j].equals("X2CANVAS")) //Comprobamos si estamos en modo cloud
+					      				{
+					      				cloudFolder = parametroValor[j];
+					      				modoCloud = true;
+					      				}
 					      			}
 					      }
-						 
+					      
+					      
+					if (modoCloud)
+						{
+						pdf = true;
+						impDirecta= false;
+						impresora = cloudFolder + DigestUtils.sha1Hex(String.valueOf(System.currentTimeMillis())) + ".pdf";//Ruta de la impresora
+						
+						}	
+					
+					
 					JasperPrint print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
 					if (impDirecta) 
 							{
