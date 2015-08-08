@@ -7,6 +7,8 @@ import java.lang.Throwable;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.print.PrinterJob;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import javax.print.*;
 import javax.print.attribute.*;
 import javax.print.attribute.standard.*;
@@ -26,9 +28,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 
 
+
 public class enebooreports {
  
-public static String ficheroTemp;
+public static String ficheroTemp, fileTempCloud;
 public static Connection conn;
 //public static String driverSQL;
 public static String build = "Build " + jrversion.eReports();
@@ -38,7 +41,7 @@ public static splash splash = new splash();
 			try {
 			    splash.mostrar(); //Mostramos splash
 			    String ficheroTemp;
-                            String impresora, cloudFolder;
+                            String impresora,cloudID;
                            // String changelog = "";
                             Image img;
 			    Boolean pdf,impDirecta, guardaTemporal, modoCloud;
@@ -97,7 +100,7 @@ public static splash splash = new splash();
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
                             modoCloud = false;
-                            cloudFolder = "";
+                            cloudID = "";
                             guardaTemporal = Boolean.parseBoolean(stdin.readLine());
 		            pdf = false; // exporta a pdf
                             pdf = Boolean.parseBoolean(stdin.readLine());
@@ -144,9 +147,11 @@ public static splash splash = new splash();
 	 						 				}
 					      			if(parametroNombre[j].equals("X2CANVAS")) //Comprobamos si estamos en modo cloud
 					      				{
-					      				cloudFolder = parametroValor[j];
+					      				cloudID = parametroValor[j];
 					      				modoCloud = true;
 					      				}
+					      			
+					      			
 					      			}
 					      }
 					      
@@ -154,9 +159,9 @@ public static splash splash = new splash();
 					if (modoCloud)
 						{
 						pdf = true;
-						impDirecta= false;
-						impresora = cloudFolder + DigestUtils.sha1Hex(String.valueOf(System.currentTimeMillis())) + ".pdf";//Ruta de la impresora
-						
+						fileTempCloud = DigestUtils.sha1Hex(String.valueOf(System.currentTimeMillis()));
+						impresora = "/downloads/"+ fileTempCloud + ".pdf";//Ruta de la impresora
+												
 						}	
 					
 					
@@ -170,6 +175,28 @@ public static splash splash = new splash();
 					 		if(pdf) 
 					 			{
 					 			JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
+					 			
+					 			File file = new File(impresora);
+								int nIntentos = 0;
+								
+								while (!file.exists() && nIntentos <= 100) {
+    									try { 
+        									Thread.sleep(100);
+        									nIntentos++;
+    									    } catch (InterruptedException ie) { /* safe to ignore */ }
+								}
+								
+					 			if(modoCloud && file.exists())
+					 				{
+					 				Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+									StringSelection ss = new StringSelection(fileTempCloud + ".pdf_" + cloudID);
+									cb.setContents(ss, ss);
+					 				}
+					 				else
+					 				{
+					 				JOptionPane.showMessageDialog(null, "Se ha producido un problema al generar el pdf." , "Eneboo Reports", 1);
+					 				}
+					 			
 								splash.ocultar();
 								}
 								          else
