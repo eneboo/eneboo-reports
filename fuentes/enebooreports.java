@@ -159,7 +159,7 @@ public static splash splash = new splash();
 					if (modoCloud)
 						{
 						pdf = true;
-						fileTempCloud = DigestUtils.sha1Hex(String.valueOf(System.currentTimeMillis()));
+						fileTempCloud = DigestUtils.shaHex(String.valueOf(System.currentTimeMillis()));
 						impresora = "/downloads/"+ fileTempCloud + ".pdf";//Ruta de la impresora
 												
 						}	
@@ -185,19 +185,21 @@ public static splash splash = new splash();
         									nIntentos++;
     									    } catch (InterruptedException ie) { /* safe to ignore */ }
 								}
-								
+
 					 			if(modoCloud && file.exists())
 					 				{
 					 				Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
 									StringSelection ss = new StringSelection(fileTempCloud + ".pdf_" + cloudID);
 									cb.setContents(ss, ss);
 					 				}
-					 				else
-					 				{
-					 				JOptionPane.showMessageDialog(null, "Se ha producido un problema al generar el pdf." , "Eneboo Reports", 1);
-					 				}
-					 			
-								splash.ocultar();
+					 				else 
+									if (!file.exists())
+					 						{
+											splash.ocultar();
+					 						JOptionPane.showMessageDialog(null, "Se ha producido un problema al generar el pdf." , "Eneboo Reports", 1);
+					 						}
+								splash.ocultar();					 			
+
 								}
 								          else
 								          	{
