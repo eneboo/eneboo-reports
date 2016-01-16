@@ -18,6 +18,11 @@ import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -31,7 +36,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 public class enebooreports {
  
-public static String ficheroTemp, fileTempCloud;
+public static String ficheroTemp, fileTempCloud, exportFormat;
 public static Connection conn;
 //public static String driverSQL;
 public static String build = "Build " + jrversion.eReports();
@@ -42,6 +47,7 @@ public static splash splash = new splash();
 			    splash.mostrar(); //Mostramos splash
 			    String ficheroTemp;
                             String impresora,cloudID;
+			    exportFormat = "pdf";
                            // String changelog = "";
                             Image img;
 			    Boolean pdf,impDirecta, guardaTemporal, modoCloud;
@@ -150,6 +156,10 @@ public static splash splash = new splash();
 					      				cloudID = parametroValor[j];
 					      				modoCloud = true;
 					      				}
+								if(parametroNombre[j].equals("FORMAT"))
+									{
+									exportFormat = parametroValor[j];
+									}
 					      			
 					      			
 					      			}
@@ -174,8 +184,37 @@ public static splash splash = new splash();
 							else
 					 		if(pdf) 
 					 			{
+							if (exportFormat.equals("pdf"))
 					 			JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
-					 			
+							if (exportFormat.equals("html"))
+					 			JasperExportManager.exportReportToHtmlFile(print, impresora); // Exporta el informe a HTML
+							if (exportFormat.equals("xml"))
+					 			JasperExportManager.exportReportToXmlFile(print, impresora,false); // Exporta el informe a XML
+							if (exportFormat.equals("csv")) // Exporta el informe a CSV
+								{
+					 			JRCsvExporter exporter = new JRCsvExporter();
+								exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+								exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, impresora.toString());
+								exporter.exportReport();
+								}
+							if (exportFormat.equals("xls")) // Exporta el informe a XLS
+								{				   				 
+								    SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+        								configuration.setOnePagePerSheet(true);
+        								configuration.setDetectCellType(true);
+        								configuration.setCollapseRowSpan(false);
+       									configuration.setWhitePageBackground(false);
+ 
+        								File file = new File(impresora);
+        								FileOutputStream fos = new FileOutputStream(file,true);
+ 
+        								JRXlsExporter exporterXLS = new JRXlsExporter();
+        								exporterXLS.setExporterInput(new SimpleExporterInput(print));
+        								exporterXLS.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+        								exporterXLS.setConfiguration(configuration);
+        								exporterXLS.exportReport();
+
+					 			}
 					 			File file = new File(impresora);
 								int nIntentos = 0;
 								
@@ -196,7 +235,7 @@ public static splash splash = new splash();
 									if (!file.exists())
 					 						{
 											splash.ocultar();
-					 						JOptionPane.showMessageDialog(null, "Se ha producido un problema al generar el pdf." , "Eneboo Reports", 1);
+					 						JOptionPane.showMessageDialog(null, "Se ha producido un problema al generar el " + exportFormat + "." , "Eneboo Reports", 1);
 					 						}
 								splash.ocultar();					 			
 
