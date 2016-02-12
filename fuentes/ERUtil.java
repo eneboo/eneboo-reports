@@ -132,13 +132,21 @@ public static Image StringToQR(String texto) throws Exception {
      new com.google.zxing.qrcode.QRCodeWriter().encode(texto,com.google.zxing.BarcodeFormat.QR_CODE, 300, 300));
     }
 
+
+/**
+@param destFile	Nombre del fichero sin extensión
+*/
+public static String XpmToFile(String destFile)
+	{
+	return XpmToFile(destFile,"");	
+}
+
 /**
 @param destFile	Nombre del fichero sin extensión
 @param data	Contenido del Xpm en bruto
 */
-public static String XpmToFile(String destFile)
+public static String XpmToFile(String destFile,String data)
 	{
-	String data="";
 	String qry="";
 	String destFileFinal = new File ("../../temp_files/images/").getAbsolutePath () +"/"+ destFile+".jpeg";
 	String rutaDirImages = new File("../../temp_files/images/").getAbsolutePath ();
@@ -151,26 +159,30 @@ public static String XpmToFile(String destFile)
 		folder.mkdir();
 	
 	Xpm conversor = new Xpm();
-	try {
-	//if (enebooreports.driverSQL.equals("org.postgresql.Driver"))
-	qry = "SELECT contenido FROM fllarge WHERE fllarge.refkey = '"+ destFile +"'" ; //En principio es la misma consulta en MySQL y PostgreSQL
-	Connection conn = enebooreports.conn;
-	//JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: 1." , "Eneboo Reports", 1);
-	Statement stmt = conn.createStatement();
-	//JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: 2." , "Eneboo Reports", 1);
-	ResultSet rs = stmt.executeQuery(qry); 
-	if (rs.next())
-		data = rs.getString("contenido");
-	else
-		{
-		return null;
-		}
+	if (data.equals("")) //Si no le pasamos nada en data
+		{	
+		try {
+			//* OJO: Solo busca en fllarge modo tabla única *//
+
+			//if (enebooreports.driverSQL.equals("org.postgresql.Driver"))
+			qry = "SELECT contenido FROM fllarge WHERE fllarge.refkey = '"+ destFile +"'" ; //En principio es la misma consulta en MySQL y PostgreSQL
+			Connection conn = enebooreports.conn;
+			//JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: 1." , "Eneboo Reports", 1);
+			Statement stmt = conn.createStatement();
+			//JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: 2." , "Eneboo Reports", 1);
+			ResultSet rs = stmt.executeQuery(qry); 
+			if (rs.next()) {
+				data = rs.getString("contenido");
+			} else {
+				return null;
+			}
 	
-	}
-   	 catch (SQLException e)
-    		{
-		enebooreports.crearLogError(e);
-   		 }
+		}
+   	 	catch (SQLException e)
+    			{
+			enebooreports.crearLogError(e);
+   		 	}
+		}
 	Image imgData = conversor.XpmToImage(data);
     	BufferedImage bfImage = new BufferedImage(imgData.getWidth(null), imgData.getHeight(null), BufferedImage.TYPE_INT_RGB);
     	bfImage.getGraphics().drawImage(imgData, 0, 0, null);
