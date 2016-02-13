@@ -14,13 +14,16 @@ import javax.print.attribute.*;
 import javax.print.attribute.standard.*;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
-import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
-import net.sf.jasperreports.engine.JRExporterParameter;
+
+
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+
+import net.sf.jasperreports.export.*;
+import net.sf.jasperreports.engine.export.*;
+import net.sf.jasperreports.engine.export.oasis.*;
+import net.sf.jasperreports.engine.export.ooxml.*;
+
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -53,6 +56,7 @@ public static splash splash = new splash();
 			    Boolean pdf,impDirecta, guardaTemporal, modoCloud;
 			    int nCopias, nParametrosJasper;
 			    long start;
+        		    Exporter exporter = new JRPdfExporter();
 			    Class.forName(args[0]);
 			    //JOptionPane.showMessageDialog(null, "Init iniciado" , "Eneboo Reports", 1);
 			    InputStream is=enebooreports.class.getClass().getResourceAsStream("/otros/init.jasper");
@@ -176,46 +180,64 @@ public static splash splash = new splash();
 					
 					
 					JasperPrint print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
+					
+
 					if (impDirecta) 
 							{
 							impresionDirecta( impresora, nCopias, print );
 							splash.ocultar();
 							}
-							else
-					 		if(pdf) 
-					 			{
-							if (exportFormat.equals("pdf"))
-					 			JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
-							if (exportFormat.equals("html"))
-					 			JasperExportManager.exportReportToHtmlFile(print, impresora); // Exporta el informe a HTML
-							if (exportFormat.equals("xml"))
-					 			JasperExportManager.exportReportToXmlFile(print, impresora,false); // Exporta el informe a XML
-							if (exportFormat.equals("csv")) // Exporta el informe a CSV
-								{
-					 			JRCsvExporter exporter = new JRCsvExporter();
-								exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
-								exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, impresora.toString());
-								exporter.exportReport();
-								}
-							if (exportFormat.equals("xls")) // Exporta el informe a XLS
-								{				   				 
-								    SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
-        								configuration.setOnePagePerSheet(true);
-        								configuration.setDetectCellType(true);
-        								configuration.setCollapseRowSpan(false);
-       									configuration.setWhitePageBackground(false);
- 
-        								File file = new File(impresora);
+							else if (pdf) {
+									File file = new File(impresora);
         								FileOutputStream fos = new FileOutputStream(file,true);
- 
-        								JRXlsExporter exporterXLS = new JRXlsExporter();
-        								exporterXLS.setExporterInput(new SimpleExporterInput(print));
-        								exporterXLS.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
-        								exporterXLS.setConfiguration(configuration);
-        								exporterXLS.exportReport();
+
+					 			switch (exportFormat) {
+								case "pdf": 							
+									exporter = new JRPdfExporter();
+            								exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+									break;
+								case "html":
+									exporter = new HtmlExporter();
+            								exporter.setExporterOutput(new SimpleHtmlExporterOutput(fos));
+									break;
+								case "xml":
+					 				exporter = new JRXmlExporter();
+            								exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+            								break;
+								case "csv": // Exporta el informe a CSV
+					 				exporter = new JRCsvExporter();
+									SimpleCsvExporterConfiguration configurationCsv = new SimpleCsvExporterConfiguration();
+									configurationCsv.setFieldDelimiter(";");
+									exporter.setConfiguration(configurationCsv);
+									exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+									break;
+								case "xls":// Exporta el informe a XLS
+     									exporter = new JRXlsExporter();
+									SimpleXlsReportConfiguration configurationXls = new SimpleXlsReportConfiguration();
+        								configurationXls.setOnePagePerSheet(true);
+        								configurationXls.setDetectCellType(true);
+        								configurationXls.setCollapseRowSpan(false);
+       									configurationXls.setWhitePageBackground(false);
+       									exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+       									exporter.setConfiguration(configurationXls);
+
+									break;
+        							case "xlsx":
+            								exporter = new JRXlsxExporter();
+            								exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+            								break;
+								case "odt":
+									exporter = new JROdtExporter();
+									exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+									break;
+						        	default:
+            								JOptionPane.showMessageDialog(null, "Formato desconocido" , "Eneboo Reports", 1);							
 
 					 			}
-					 			File file = new File(impresora);
+
+							exporter.setExporterInput(new SimpleExporterInput(print));
+							exporter.exportReport();							
+								
 								int nIntentos = 0;
 								
 								while (!file.exists() && nIntentos <= 100) {
@@ -312,6 +334,7 @@ public static splash splash = new splash();
 		try
 		{
 		JRPrintServiceExporter exporter = new JRPrintServiceExporter();
+
 		//Aqui imprimimos directamente en var impresora...
 		//JasperPrint print = JasperFillManager.fillReport( this.class.getResource("/classpath/yourReport.jasper").getPath(), new HashMap(), new yourReportDataSource());
 		PrinterJob job = PrinterJob.getPrinterJob();
@@ -335,15 +358,26 @@ public static splash splash = new splash();
 			//MediaSizeName mediaSizeName = MediaSize.findMedia(4,4,MediaPrintableArea.INCH);
 			//printRequestAttributeSet.add(mediaSizeName);
 			printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
-			exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+
+			//exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+			ExporterInput inp = new SimpleExporterInput(print);			
+			
+
+
 			/* We set the selected service and pass it as a paramenter */
-			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, services[selectedService]);
-			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, services[selectedService].getAttributes());
-			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
-			exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
-			exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
-					
+			//PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
+			SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
+			configuration.setPrintService(job.getPrintService());
+			configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
+			configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes());
+			configuration.setDisplayPageDialog(false);
+			configuration.setDisplayPrintDialog(false);
+
+
+			exporter.setExporterInput(inp);
+			exporter.setConfiguration(configuration);
 			exporter.exportReport();
+
 			exporter = null;
 			} else JOptionPane.showMessageDialog(null, "Eneboo Reports :: impresionDirecta :: No existe la impresora especificaca : ( " + impresora + " ).\n\nEspecifique alguna de las siguientes impresoras :\n" + listadoImpresorasDisponibles , "Eneboo Reports", 1);
 						
