@@ -149,10 +149,16 @@ public static String XpmToFile(String destFile,String data)
 	{
 	String qry="";
 	String LgQry="";
-	Boolean MultiLarge = false;
+	//Boolean MultiLarge = false;
 	String tableName = "fllarge";
-	String destFileFinal = new File ("../../temp_files/images/").getAbsolutePath () +"/"+ destFile+".jpeg";
-	String rutaDirImages = new File("../../temp_files/images/").getAbsolutePath ();
+        String tempFolder = "../../temp_files/images/";
+        String AQJasper = new File("./SHA").getAbsolutePath ();
+        File AQFile = new File(AQJasper);
+        if (AQFile.exists())
+              tempFolder = "./temp_files/images/";
+        
+	String destFileFinal = new File(tempFolder).getAbsolutePath () +"/"+ destFile+".jpeg";
+	String rutaDirImages = new File(tempFolder).getAbsolutePath ();
 	File fichero = new File(destFileFinal);
 	if (fichero.exists())
 		return destFileFinal;
@@ -165,34 +171,43 @@ public static String XpmToFile(String destFile,String data)
 	if (data.equals("")) //Si no le pasamos nada en data
 		{	
 		try {
-			//* OJO: Solo busca en fllarge modo tabla única *//
 
 			//if (enebooreports.driverSQL.equals("org.postgresql.Driver"))
-			LgQry = "SELECT valor FROM flsettings WHERE flkey ='FLLargeMode'";
+			//LgQry = "SELECT valor FROM flsettings WHERE flkey ='FLLargeMode'";
 
 			Connection conn = enebooreports.conn;
 			//JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: 1." , "Eneboo Reports", 1);
 			Statement stmt = conn.createStatement();
 			//JOptionPane.showMessageDialog(null, "ERUtil.XpmToFile :: 2." , "Eneboo Reports", 1);
-			ResultSet Fg = stmt.executeQuery(LgQry);
-			if (Fg.next()) {
-				if (Fg.getString("valor").equals("1") || Fg.getString("valor").equals("true")) {
-					MultiLarge = true;
-				}	
-			}
+			//ResultSet Fg = stmt.executeQuery(LgQry);
+			//if (Fg.next()) {
+			//	if (Fg.getString("valor").equals("1") || Fg.getString("valor").equals("true")) {
+			//		MultiLarge = true;
+			//	}	
+			//}
 			
-			if(MultiLarge) {
-			String[] cadena = destFile.split("@");
-			tableName += "_" + cadena[1];
-			}
-
-			qry = "SELECT contenido FROM "+tableName+" WHERE fllarge.refkey = '"+ destFile +"'" ; //En principio es la misma consulta en MySQL y PostgreSQL			
+			//if(MultiLarge) {
+			//String[] cadena = destFile.split("@");
+			//tableName += "_" + cadena[1];
+			//}
+			//Probamos simple ( eneboo/abanq )
+			qry = "SELECT contenido FROM "+tableName+" WHERE " + tableName + ".refkey = '"+ destFile +"'"; //En principio es la misma consulta en MySQL y PostgreSQL			
 			ResultSet rs = stmt.executeQuery(qry); 
 			if (rs.next()) {
 				data = rs.getString("contenido");
 			} else {
-				return null;
-			}
+				//Si no retorna valor con simple ,probamos con multiple
+				String[] cadena = destFile.split("@");
+				tableName += "_" + cadena[1];
+				qry = "SELECT contenido FROM "+tableName+" WHERE " + tableName + ".refkey = '"+ destFile +"'"; //En principio es la misma consulta en MySQL y PostgreSQL			
+				rs = stmt.executeQuery(qry); 
+				if (rs.next()) {
+					data = rs.getString("contenido");
+					} else {
+					data = null; // No la encuentro en ningún sitio
+					}
+							
+				}
 	
 		}
    	 	catch (SQLException e)
