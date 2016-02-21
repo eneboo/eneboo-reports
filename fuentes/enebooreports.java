@@ -105,7 +105,7 @@ public static splash splash = new splash();
           		    ficheroTemp = stdin.readLine();
 			    if (ficheroTemp == null ) System.exit(0);
 			    
-			    splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
+
 			    enebooreports.ficheroTemp = ficheroTemp;
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
@@ -120,6 +120,7 @@ public static splash splash = new splash();
                             impresora = stdin.readLine();
 			    impDirecta = false; // impresión directa
                             impDirecta = Boolean.parseBoolean(stdin.readLine());
+			    if (!impDirecta) splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
                             nParametrosJasper = 0; // Número de parametros que vienen (Pareja Nombre-Valor)
                             nParametrosJasper = Integer.parseInt(stdin.readLine());
                             String[] parametroNombre = new String[nParametrosJasper]; 
@@ -136,7 +137,10 @@ public static splash splash = new splash();
 						guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
 						hm.put("VERSION", enebooreports.build);
 						//hm.put("CHANGELOG",listadoCompleto);
-						hm.put("VERSIONJR",enebooreports.versionJR);						
+						hm.put("VERSIONJR",enebooreports.versionJR);
+						//if (!impDirecta) {
+						//hm.put
+						//}						
 						}
 					else {     
                           	       		if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
@@ -266,7 +270,7 @@ public static splash splash = new splash();
 								          	{
 								          	splash.ocultar();
 								          	//java.awt.Toolkit.getDefaultToolkit().beep();
-								          	if (!mostrarVisor( print, build))
+								          	if (!mostrarVisor( print, build, nCopias))
 								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
 								          	}		  	       
 				if (!guardaTemporal)
@@ -295,13 +299,28 @@ public static splash splash = new splash();
 	
 	
 	
-	public static Boolean mostrarVisor(JasperPrint print, String build) 
+	public static Boolean mostrarVisor(JasperPrint print, String build, int nCopias) 
 									{
 							try {
 									JasperViewer viewer = new JasperViewer(print, false);
                                     					viewer.setTitle(print.getName() + " - Eneboo Reports"); 
 									viewer.setIconImage(new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo32.gif")).getImage());
+
+									//PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
+									//printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
+									//SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
+									//configuration.setPrintService(job.getPrintService());
+									//configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
+									//configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes());
+									//exporter.setConfiguration(configuration);									
+
+
 									viewer.setVisible(true);
+
+
+
+
+
 									try {
 										viewer.setAlwaysOnTop(true);
 										viewer.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -370,9 +389,10 @@ public static splash splash = new splash();
 			configuration.setPrintService(job.getPrintService());
 			configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
 			configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes());
-			configuration.setDisplayPageDialog(false);
-			configuration.setDisplayPrintDialog(false);
-
+			if (!impresora.equals("")) {
+				configuration.setDisplayPageDialog(false);
+				configuration.setDisplayPrintDialog(false);
+			}
 
 			exporter.setExporterInput(inp);
 			exporter.setConfiguration(configuration);
