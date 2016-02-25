@@ -47,7 +47,7 @@ public static String versionJR = jrversion.jasper();
 public static splash splash = new splash();
                 public static void main(String[] args) throws IOException {     
 			try {
-			    splash.mostrar(); //Mostramos splash
+			    //splash.mostrar(); //Mostramos splash
 			    String ficheroTemp;
                             String impresora,cloudID;
 			    exportFormat = "pdf";
@@ -188,7 +188,10 @@ public static splash splash = new splash();
 
 					if (impDirecta) 
 							{
-							impresionDirecta( impresora, nCopias, print );
+							if (!impresionDirecta( impresora, nCopias, print )) {
+								JOptionPane.showMessageDialog(null, "Impresión directa en " + impresora + " sufrió un problema." , "Eneboo Reports", 1);
+								ficheroTemp = "version"; //Cierra la librería
+								}
 							splash.ocultar();
 							}
 							else if (pdf) {
@@ -262,6 +265,7 @@ public static splash splash = new splash();
 					 						{
 											splash.ocultar();
 					 						JOptionPane.showMessageDialog(null, "Se ha producido un problema al generar el " + exportFormat + "." , "Eneboo Reports", 1);
+											ficheroTemp = "version"; //Cierra la librería
 					 						}
 								splash.ocultar();					 			
 
@@ -271,8 +275,11 @@ public static splash splash = new splash();
 								          	splash.ocultar();
 								          	//java.awt.Toolkit.getDefaultToolkit().beep();
 								          	if (!mostrarVisor( print, build, nCopias))
+											{
 								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
-								          	}		  	       
+											ficheroTemp = "version"; //Cierra la librería librería											
+											}								          	
+										}		  	       
 				if (!guardaTemporal)
 						{
                                    		File ficheroT = new File(ficheroTemp);
@@ -348,7 +355,7 @@ public static splash splash = new splash();
 				
 					
 					
-	public static void impresionDirecta(String impresora, int nCopias, JasperPrint print) {
+	public static Boolean impresionDirecta(String impresora, int nCopias, JasperPrint print) {
 	
 		try
 		{
@@ -371,7 +378,7 @@ public static splash splash = new splash();
 				listadoImpresorasDisponibles += services[i].getName() + "\n";
 							}
 		if (listadoImpresorasDisponibles.equals("")) listadoImpresorasDisponibles = "¡¡ Opppps !! . No se han detectado impresoras en el sistema";
-		if ( selectedService > -1) 
+		if ( selectedService > -1) // || impresora.equals("false") || impresora.equals("")) 
 			{
 			PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
 			//MediaSizeName mediaSizeName = MediaSize.findMedia(4,4,MediaPrintableArea.INCH);
@@ -379,21 +386,26 @@ public static splash splash = new splash();
 			printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
 
 			//exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
-			ExporterInput inp = new SimpleExporterInput(print);			
+					
 			
 
 
 			/* We set the selected service and pass it as a paramenter */
 			//PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
 			SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
-			configuration.setPrintService(job.getPrintService());
-			configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
-			configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes());
-			if (!impresora.equals("")) {
+			//configuration.setDisplayPrintDialog(true);
+
+			
+			//if (!impresora.equals("") && !impresora.equals("false")){ //Si no especificamos impresora muestra menu del sistema
+				configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes()); //Asignamos la impresora directa
 				configuration.setDisplayPageDialog(false);
 				configuration.setDisplayPrintDialog(false);
-			}
+			//} 
 
+			configuration.setPrintService(job.getPrintService());
+			configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
+			ExporterInput inp = new SimpleExporterInput(print);
+			
 			exporter.setExporterInput(inp);
 			exporter.setConfiguration(configuration);
 			exporter.exportReport();
@@ -404,8 +416,9 @@ public static splash splash = new splash();
 		}catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "impresionDirecta :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
 	    e.printStackTrace();
+			return false;
 		       }  									
-		       
+		   return true;    
 		  }
 		  
 	public static void crearLogError(Exception error) {
