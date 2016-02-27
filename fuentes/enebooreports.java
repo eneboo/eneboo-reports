@@ -97,6 +97,7 @@ public static splash splash = new splash();
            			enebooreports.conn.close();
                             enebooreports.conn = DriverManager.getConnection(args[1],args[2],args[3]);
                             //JOptionPane.showMessageDialog(null, "Init finalizado" , "Eneboo Reports", 1);
+			
 			    do
                               {
                             BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
@@ -104,8 +105,6 @@ public static splash splash = new splash();
 			    ficheroTemp =""; //Nombre fichero Temporal
           		    ficheroTemp = stdin.readLine();
 			    if (ficheroTemp == null ) System.exit(0);
-			    
-
 			    enebooreports.ficheroTemp = ficheroTemp;
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
@@ -128,8 +127,8 @@ public static splash splash = new splash();
                           				  for(int i = 0; i < nParametrosJasper; i++ ) {
 	 									parametroNombre[i] = stdin.readLine();
 	 									parametroValor[i] = stdin.readLine();  
+							//JOptionPane.showMessageDialog(null, "PARAMETRO  " + parametroNombre[i] + "-" + parametroValor[i] , "Eneboo Reports", 1);
 													}
-
                         java.util.Map<String, Object> hm = new HashMap<String,Object>(); //INICIALIZO MAPA    				
 			if (ficheroTemp.equals( "version" )) 
 						{
@@ -172,8 +171,7 @@ public static splash splash = new splash();
 					      			
 					      			}
 					      }
-					      
-					      
+					            
 					if (modoCloud)
 						{
 						pdf = true;
@@ -286,6 +284,7 @@ public static splash splash = new splash();
                                     		if (!ficheroT.delete())
                                          		JOptionPane.showMessageDialog(null, "El fichero Temporal " + ficheroTemp + " no se puede borrar." , "Eneboo Reports", 1);
 						}
+		
  				} while (!ficheroTemp.equals( "version" ));
  			splash.cerrar(); //Eliminamos la instancia del splash	
  			System.exit(0);
@@ -360,7 +359,6 @@ public static splash splash = new splash();
 		try
 		{
 		JRPrintServiceExporter exporter = new JRPrintServiceExporter();
-
 		//Aqui imprimimos directamente en var impresora...
 		//JasperPrint print = JasperFillManager.fillReport( this.class.getResource("/classpath/yourReport.jasper").getPath(), new HashMap(), new yourReportDataSource());
 		PrinterJob job = PrinterJob.getPrinterJob();
@@ -378,35 +376,20 @@ public static splash splash = new splash();
 				listadoImpresorasDisponibles += services[i].getName() + "\n";
 							}
 		if (listadoImpresorasDisponibles.equals("")) listadoImpresorasDisponibles = "¡¡ Opppps !! . No se han detectado impresoras en el sistema";
-		if ( selectedService > -1) // || impresora.equals("false") || impresora.equals("")) 
+		if ( selectedService > -1) 
 			{
+			
 			PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
-			//MediaSizeName mediaSizeName = MediaSize.findMedia(4,4,MediaPrintableArea.INCH);
-			//printRequestAttributeSet.add(mediaSizeName);
 			printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
-
-			//exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
-					
-			
-
-
-			/* We set the selected service and pass it as a paramenter */
-			//PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
 			SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
-			//configuration.setDisplayPrintDialog(true);
-
-			
-			//if (!impresora.equals("") && !impresora.equals("false")){ //Si no especificamos impresora muestra menu del sistema
-				configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes()); //Asignamos la impresora directa
-				configuration.setDisplayPageDialog(false);
-				configuration.setDisplayPrintDialog(false);
-			//} 
-
+			configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes()); //Asignamos la impresora directa
 			configuration.setPrintService(job.getPrintService());
 			configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
-			ExporterInput inp = new SimpleExporterInput(print);
-			
-			exporter.setExporterInput(inp);
+			configuration.setDisplayPageDialog(false);
+			configuration.setDisplayPrintDialog(false);
+
+			ExporterInput inp = new SimpleExporterInput(print);			
+			exporter.setExporterInput(inp);			
 			exporter.setConfiguration(configuration);
 			exporter.exportReport();
 
@@ -416,6 +399,7 @@ public static splash splash = new splash();
 		}catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "impresionDirecta :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
 	    e.printStackTrace();
+	    crearLogError(e);
 			return false;
 		       }  									
 		   return true;    
