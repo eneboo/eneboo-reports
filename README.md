@@ -12,4 +12,4 @@ http://www.eneboo.org/pub/contrib/eneboo_reports/EnebooReports-6.2.0-20160114_7.
 http://www.eneboo.org/pub/contrib/eneboo_reports/EnebooReports-6.2.0-20160114_8.zip
 
 
-Consigue reports listos para usar en https://github.com/eneboo/eneboo-reports
+Consigue reports listos para usar en https://github.com/eneboo/reports4eneboo-reports
