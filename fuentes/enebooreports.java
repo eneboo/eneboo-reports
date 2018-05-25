@@ -14,7 +14,7 @@ import javax.print.attribute.*;
 import javax.print.attribute.standard.*;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
-
+import net.sf.jasperreports.engine.JRPrintPage;
 
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -182,11 +182,19 @@ public static splash splash = new splash();
 					
 					
 					JasperPrint print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
+					//Rellenamos con numCopias
+					int sizeJasper = print.getPages().size();   
+					JasperPrint printCopy = print;
+					for(int i = 1; i < nCopias;i++){
+						for(int x = 0; x < sizeJasper;x++){
+							print.addPage(print.getPages().size(), (JRPrintPage) printCopy.getPages().get(x));
+						}
+					}
 					
 
 					if (impDirecta) 
 							{
-							if (!impresionDirecta( impresora, nCopias, print )) {
+							if (!impresionDirecta( impresora, print )) {
 								JOptionPane.showMessageDialog(null, "Impresión directa en " + impresora + " sufrió un problema." , "Eneboo Reports", 1);
 								ficheroTemp = "version"; //Cierra la librería
 								}
@@ -272,7 +280,7 @@ public static splash splash = new splash();
 								          	{
 								          	splash.ocultar();
 								          	//java.awt.Toolkit.getDefaultToolkit().beep();
-								          	if (!mostrarVisor( print, build, nCopias))
+								          	if (!mostrarVisor( print, build))
 											{
 								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
 											ficheroTemp = "version"; //Cierra la librería librería											
@@ -305,7 +313,7 @@ public static splash splash = new splash();
 	
 	
 	
-	public static Boolean mostrarVisor(JasperPrint print, String build, int nCopias) 
+	public static Boolean mostrarVisor(JasperPrint print, String build) 
 									{
 							try {
 									JasperViewer viewer = new JasperViewer(print, false);
@@ -354,7 +362,7 @@ public static splash splash = new splash();
 				
 					
 					
-	public static Boolean impresionDirecta(String impresora, int nCopias, JasperPrint print) {
+	public static Boolean impresionDirecta(String impresora, JasperPrint print) {
 	
 		try
 		{
@@ -380,7 +388,7 @@ public static splash splash = new splash();
 			{
 			
 			PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
-			printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
+			//printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
 			SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
 			configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes()); //Asignamos la impresora directa
 			configuration.setPrintService(job.getPrintService());
