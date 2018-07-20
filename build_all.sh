@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 echo -e "\nUtilidad de empaquetado de librería Eneboo Reports y dependencias"
-echo -e "(C) 2012 José A. Fernández Fernández <aullasistemas@gmail.com>\n"
+echo -e "(C) 2012-2018 José A. Fernández Fernández <aullasistemas@gmail.com>\n"
 
 for jasperfile in lib/jasperreports-fonts-*.jar
   do

@@ -399,8 +399,14 @@ public static splash splash = new splash();
 			ExporterInput inp = new SimpleExporterInput(print);			
 			exporter.setExporterInput(inp);			
 			exporter.setConfiguration(configuration);
-			exporter.exportReport();
-
+			try {
+				exporter.exportReport();
+			    } catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "impresionDirecta :: El documento no tiene páginas", "Eneboo Reports", 1);
+	    			//e.printStackTrace();
+	    			crearLogError(e);
+				return false;
+				}
 			exporter = null;
 			} else JOptionPane.showMessageDialog(null, "Eneboo Reports :: impresionDirecta :: No existe la impresora especificaca : ( " + impresora + " ).\n\nEspecifique alguna de las siguientes impresoras :\n" + listadoImpresorasDisponibles , "Eneboo Reports", 1);
 						
