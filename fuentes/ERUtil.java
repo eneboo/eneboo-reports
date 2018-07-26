@@ -220,12 +220,19 @@ public static String XpmToFile(String destFile,String data)
     	bfImage.getGraphics().drawImage(imgData, 0, 0, null);
     	try {
         
-		ImageIO.write(bfImage, "jpg",new File(destFileFinal));  	     
+		ImageIO.write(bfImage, "jpg",fichero);  	     
         } catch (IOException e) {
         enebooreports.crearLogError(e);
         }
 	conversor=null;
-	return destFileFinal;
+	if (fichero.exists())
+		{
+		return destFileFinal;
+		}
+	else
+		{
+		return null;
+		}
 	}
     
 public static String ocultaTexto(int inicio, int longitud, String texto, String caracter)
