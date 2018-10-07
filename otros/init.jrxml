@@ -12,7 +12,7 @@
 	<title>
 		<band height="130" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="50" width="555" height="59" forecolor="#E4B724" backcolor="#6A6952" uuid="64729bc7-1e90-4750-82fc-bfa4e70ebcf1"/>
+				<reportElement mode="Opaque" x="0" y="50" width="555" height="59" forecolor="#67A132" backcolor="#EBE9BF" uuid="64729bc7-1e90-4750-82fc-bfa4e70ebcf1"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Serif" size="48" isBold="true"/>
 				</textElement>
@@ -20,7 +20,9 @@
 			</staticText>
 			<textField>
 				<reportElement x="0" y="109" width="555" height="20" uuid="a538d06d-9e82-414a-8023-d0afca7befe6"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{VERSION}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -31,29 +33,36 @@
 				<reportElement x="164" y="83" width="219" height="197" uuid="d911ff2f-c79c-4437-8d49-1f1133323396"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="0" y="345" width="555" height="20" uuid="d5a88950-cf12-4e6e-b521-1524a7ef51dd"/>
+				<reportElement x="0" y="360" width="555" height="20" uuid="d5a88950-cf12-4e6e-b521-1524a7ef51dd"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Gracias a todas las personas que han colaborado de alguna manera en este proyecto]]></text>
+				<text><![CDATA[Gracias a todas las personas que han colaborado de alguna manera en este proyecto.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="377" width="555" height="20" uuid="efe072ba-1620-4f5c-a9c0-361b89984616"/>
+				<reportElement x="0" y="325" width="555" height="20" uuid="efe072ba-1620-4f5c-a9c0-361b89984616"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Adaptación realizada por José A. Fernández ( aullasistemas@gmail.com )]]></text>
+				<text><![CDATA[Adaptación realizada por José A. Fernández Fernández.]]></text>
 			</staticText>
 			<image>
 				<reportElement x="194" y="100" width="161" height="162" uuid="3f69fd88-68c9-47cf-ae02-150cf256e6ba"/>
-				<imageExpression><![CDATA[ERUtil.StringToQR("http://www.aullasistemas.com")]]></imageExpression>
+				<imageExpression><![CDATA[ERUtil.StringToQR("http://eneboo.org/pub/contrib/eneboo_reports/")]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="0" y="34" width="555" height="20" uuid="a53dd07b-433d-46f7-8f8a-a929729188bf"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+					<font fontName="DejaVu Sans" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Visita www.aullasistemas.com]]></text>
+				<text><![CDATA[http://eneboo.org/pub/contrib/eneboo_reports/]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="416" width="555" height="20" uuid="bb09b308-6622-4a7a-afbe-aa8a84aa452b"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12"/>
+				</textElement>
+				<text><![CDATA[Petición de trabajos (bajo presupuesto) y sugerencias a aullasistemas@gmail.com.]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -68,41 +77,56 @@
 			<staticText>
 				<reportElement x="0" y="0" width="555" height="15" uuid="bf389725-9bda-42d8-a993-2c4bf3e7b30e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
+					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
 				<text><![CDATA[Esta librería se distribuye tal y como está, sin ninguna garantía, bajo licencia LGPLv3]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="19" width="555" height="22" uuid="4316c2d8-dcd7-49f0-a03c-2bac41781709"/>
 				<textElement verticalAlignment="Middle">
-					<font size="12"/>
+					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
 				<text><![CDATA[         Es un producto combinado con la librería Jasper Reports]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="60" width="555" height="15" uuid="4250f26d-6203-4c47-9adc-ef3c874d4189"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
 				<text><![CDATA[http://jasperforge.org/projects/jasperreports/code]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="45" width="100" height="15" uuid="c6a7b137-605b-43f8-aaf8-8a39a7b7b0e5"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
 				<text><![CDATA[Fuentes :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="75" width="555" height="16" uuid="6175be85-5d15-4093-a8e2-d8f67459246a"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
 				<text><![CDATA[http://adys.org/blackhole/src/sinai/gaspar/blackhole/Xpm.java]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="91" width="100" height="13" uuid="fafcb7e9-ec75-469b-a869-59ccaea7bc84"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
 				<text><![CDATA[Licencia]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="104" width="555" height="13" uuid="ff0d7c6e-7634-4f0d-95a0-dbdd948fcc40"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
 				<text><![CDATA[http://www.gnu.org/licenses/lgpl.html]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="403" y="24" width="100" height="14" uuid="697c111d-29e0-4cab-b868-b2970853c14f"/>
 				<textElement verticalAlignment="Middle">
-					<font size="12"/>
+					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{VERSIONJR}]]></textFieldExpression>
 			</textField>

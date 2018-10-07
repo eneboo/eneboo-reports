@@ -14,10 +14,18 @@ import javax.print.attribute.*;
 import javax.print.attribute.standard.*;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
-import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
-import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JRPrintPage;
+
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
+
+import net.sf.jasperreports.export.*;
+import net.sf.jasperreports.engine.export.*;
+import net.sf.jasperreports.engine.export.oasis.*;
+import net.sf.jasperreports.engine.export.ooxml.*;
+
+import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -31,7 +39,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 public class enebooreports {
  
-public static String ficheroTemp, fileTempCloud;
+public static String ficheroTemp, fileTempCloud, exportFormat;
 public static Connection conn;
 //public static String driverSQL;
 public static String build = "Build " + jrversion.eReports();
@@ -39,14 +47,16 @@ public static String versionJR = jrversion.jasper();
 public static splash splash = new splash();
                 public static void main(String[] args) throws IOException {     
 			try {
-			    splash.mostrar(); //Mostramos splash
+			    //splash.mostrar(); //Mostramos splash
 			    String ficheroTemp;
                             String impresora,cloudID;
+			    exportFormat = "pdf";
                            // String changelog = "";
                             Image img;
 			    Boolean pdf,impDirecta, guardaTemporal, modoCloud;
 			    int nCopias, nParametrosJasper;
 			    long start;
+        		    Exporter exporter = new JRPdfExporter();
 			    Class.forName(args[0]);
 			    //JOptionPane.showMessageDialog(null, "Init iniciado" , "Eneboo Reports", 1);
 			    InputStream is=enebooreports.class.getClass().getResourceAsStream("/otros/init.jasper");
@@ -87,6 +97,7 @@ public static splash splash = new splash();
            			enebooreports.conn.close();
                             enebooreports.conn = DriverManager.getConnection(args[1],args[2],args[3]);
                             //JOptionPane.showMessageDialog(null, "Init finalizado" , "Eneboo Reports", 1);
+			
 			    do
                               {
                             BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
@@ -94,8 +105,6 @@ public static splash splash = new splash();
 			    ficheroTemp =""; //Nombre fichero Temporal
           		    ficheroTemp = stdin.readLine();
 			    if (ficheroTemp == null ) System.exit(0);
-			    
-			    splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
 			    enebooreports.ficheroTemp = ficheroTemp;
 			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
@@ -110,6 +119,7 @@ public static splash splash = new splash();
                             impresora = stdin.readLine();
 			    impDirecta = false; // impresión directa
                             impDirecta = Boolean.parseBoolean(stdin.readLine());
+			    if (!impDirecta) splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
                             nParametrosJasper = 0; // Número de parametros que vienen (Pareja Nombre-Valor)
                             nParametrosJasper = Integer.parseInt(stdin.readLine());
                             String[] parametroNombre = new String[nParametrosJasper]; 
@@ -117,8 +127,8 @@ public static splash splash = new splash();
                           				  for(int i = 0; i < nParametrosJasper; i++ ) {
 	 									parametroNombre[i] = stdin.readLine();
 	 									parametroValor[i] = stdin.readLine();  
+							//JOptionPane.showMessageDialog(null, "PARAMETRO  " + parametroNombre[i] + "-" + parametroValor[i] , "Eneboo Reports", 1);
 													}
-
                         java.util.Map<String, Object> hm = new HashMap<String,Object>(); //INICIALIZO MAPA    				
 			if (ficheroTemp.equals( "version" )) 
 						{
@@ -126,7 +136,10 @@ public static splash splash = new splash();
 						guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
 						hm.put("VERSION", enebooreports.build);
 						//hm.put("CHANGELOG",listadoCompleto);
-						hm.put("VERSIONJR",enebooreports.versionJR);						
+						hm.put("VERSIONJR",enebooreports.versionJR);
+						//if (!impDirecta) {
+						//hm.put
+						//}						
 						}
 					else {     
                           	       		if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
@@ -150,12 +163,15 @@ public static splash splash = new splash();
 					      				cloudID = parametroValor[j];
 					      				modoCloud = true;
 					      				}
+								if(parametroNombre[j].equals("FORMAT"))
+									{
+									exportFormat = parametroValor[j];
+									}
 					      			
 					      			
 					      			}
 					      }
-					      
-					      
+					            
 					if (modoCloud)
 						{
 						pdf = true;
@@ -166,17 +182,75 @@ public static splash splash = new splash();
 					
 					
 					JasperPrint print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
+					//Rellenamos con numCopias
+					int sizeJasper = print.getPages().size();   
+					JasperPrint printCopy = print;
+					for(int i = 1; i < nCopias;i++){
+						for(int x = 0; x < sizeJasper;x++){
+							print.addPage(print.getPages().size(), (JRPrintPage) printCopy.getPages().get(x));
+						}
+					}
+					
+
 					if (impDirecta) 
 							{
-							impresionDirecta( impresora, nCopias, print );
+							if (!impresionDirecta( impresora, print )) {
+								JOptionPane.showMessageDialog(null, "Impresión directa en " + impresora + " sufrió un problema." , "Eneboo Reports", 1);
+								ficheroTemp = "version"; //Cierra la librería
+								}
 							splash.ocultar();
 							}
-							else
-					 		if(pdf) 
-					 			{
-					 			JasperExportManager.exportReportToPdfFile(print, impresora); // Exporta el informe a PDF
-					 			
-					 			File file = new File(impresora);
+							else if (pdf) {
+									File file = new File(impresora);
+        								FileOutputStream fos = new FileOutputStream(file,true);
+
+					 			switch (exportFormat) {
+								case "pdf": 							
+									exporter = new JRPdfExporter();
+            								exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+									break;
+								case "html":
+									exporter = new HtmlExporter();
+            								exporter.setExporterOutput(new SimpleHtmlExporterOutput(fos));
+									break;
+								case "xml":
+					 				exporter = new JRXmlExporter();
+            								exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+            								break;
+								case "csv": // Exporta el informe a CSV
+					 				exporter = new JRCsvExporter();
+									SimpleCsvExporterConfiguration configurationCsv = new SimpleCsvExporterConfiguration();
+									configurationCsv.setFieldDelimiter(";");
+									exporter.setConfiguration(configurationCsv);
+									exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+									break;
+								case "xls":// Exporta el informe a XLS
+     									exporter = new JRXlsExporter();
+									SimpleXlsReportConfiguration configurationXls = new SimpleXlsReportConfiguration();
+        								configurationXls.setOnePagePerSheet(true);
+        								configurationXls.setDetectCellType(true);
+        								configurationXls.setCollapseRowSpan(false);
+       									configurationXls.setWhitePageBackground(false);
+       									exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+       									exporter.setConfiguration(configurationXls);
+
+									break;
+        							case "xlsx":
+            								exporter = new JRXlsxExporter();
+            								exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+            								break;
+								case "odt":
+									exporter = new JROdtExporter();
+									exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+									break;
+						        	default:
+            								JOptionPane.showMessageDialog(null, "Formato desconocido" , "Eneboo Reports", 1);							
+
+					 			}
+
+							exporter.setExporterInput(new SimpleExporterInput(print));
+							exporter.exportReport();							
+								
 								int nIntentos = 0;
 								
 								while (!file.exists() && nIntentos <= 100) {
@@ -196,7 +270,8 @@ public static splash splash = new splash();
 									if (!file.exists())
 					 						{
 											splash.ocultar();
-					 						JOptionPane.showMessageDialog(null, "Se ha producido un problema al generar el pdf." , "Eneboo Reports", 1);
+					 						JOptionPane.showMessageDialog(null, "Se ha producido un problema al generar el " + exportFormat + "." , "Eneboo Reports", 1);
+											ficheroTemp = "version"; //Cierra la librería
 					 						}
 								splash.ocultar();					 			
 
@@ -206,14 +281,18 @@ public static splash splash = new splash();
 								          	splash.ocultar();
 								          	//java.awt.Toolkit.getDefaultToolkit().beep();
 								          	if (!mostrarVisor( print, build))
+											{
 								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
-								          	}		  	       
+											ficheroTemp = "version"; //Cierra la librería librería											
+											}								          	
+										}		  	       
 				if (!guardaTemporal)
 						{
                                    		File ficheroT = new File(ficheroTemp);
                                     		if (!ficheroT.delete())
                                          		JOptionPane.showMessageDialog(null, "El fichero Temporal " + ficheroTemp + " no se puede borrar." , "Eneboo Reports", 1);
 						}
+		
  				} while (!ficheroTemp.equals( "version" ));
  			splash.cerrar(); //Eliminamos la instancia del splash	
  			System.exit(0);
@@ -240,7 +319,22 @@ public static splash splash = new splash();
 									JasperViewer viewer = new JasperViewer(print, false);
                                     					viewer.setTitle(print.getName() + " - Eneboo Reports"); 
 									viewer.setIconImage(new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo32.gif")).getImage());
+
+									//PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
+									//printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
+									//SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
+									//configuration.setPrintService(job.getPrintService());
+									//configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
+									//configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes());
+									//exporter.setConfiguration(configuration);									
+
+
 									viewer.setVisible(true);
+
+
+
+
+
 									try {
 										viewer.setAlwaysOnTop(true);
 										viewer.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -268,7 +362,7 @@ public static splash splash = new splash();
 				
 					
 					
-	public static void impresionDirecta(String impresora, int nCopias, JasperPrint print) {
+	public static Boolean impresionDirecta(String impresora, JasperPrint print) {
 	
 		try
 		{
@@ -292,27 +386,37 @@ public static splash splash = new splash();
 		if (listadoImpresorasDisponibles.equals("")) listadoImpresorasDisponibles = "¡¡ Opppps !! . No se han detectado impresoras en el sistema";
 		if ( selectedService > -1) 
 			{
+			
 			PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
-			//MediaSizeName mediaSizeName = MediaSize.findMedia(4,4,MediaPrintableArea.INCH);
-			//printRequestAttributeSet.add(mediaSizeName);
-			printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
-			exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
-			/* We set the selected service and pass it as a paramenter */
-			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE, services[selectedService]);
-			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, services[selectedService].getAttributes());
-			exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
-			exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
-			exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
-					
-			exporter.exportReport();
+			//printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
+			SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
+			configuration.setPrintServiceAttributeSet(services[selectedService].getAttributes()); //Asignamos la impresora directa
+			configuration.setPrintService(job.getPrintService());
+			configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
+			configuration.setDisplayPageDialog(false);
+			configuration.setDisplayPrintDialog(false);
+
+			ExporterInput inp = new SimpleExporterInput(print);			
+			exporter.setExporterInput(inp);			
+			exporter.setConfiguration(configuration);
+			try {
+				exporter.exportReport();
+			    } catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "impresionDirecta :: El documento no tiene páginas", "Eneboo Reports", 1);
+	    			//e.printStackTrace();
+	    			crearLogError(e);
+				return false;
+				}
 			exporter = null;
 			} else JOptionPane.showMessageDialog(null, "Eneboo Reports :: impresionDirecta :: No existe la impresora especificaca : ( " + impresora + " ).\n\nEspecifique alguna de las siguientes impresoras :\n" + listadoImpresorasDisponibles , "Eneboo Reports", 1);
 						
 		}catch (Exception e) {  
             JOptionPane.showMessageDialog(null, "impresionDirecta :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
 	    e.printStackTrace();
+	    crearLogError(e);
+			return false;
 		       }  									
-		       
+		   return true;    
 		  }
 		  
 	public static void crearLogError(Exception error) {
