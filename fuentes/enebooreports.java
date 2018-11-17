@@ -207,6 +207,10 @@ public static splash splash = new splash();
 					 			switch (exportFormat) {
 								case "pdf": 							
 									exporter = new JRPdfExporter();
+									//exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+									SimplePdfExporterConfiguration configuration_pdf = new SimplePdfExporterConfiguration();
+									//configuration_pdf.setPermissions(PdfWriter.AllowCopy | PdfWriter.AllowPrinting);
+									exporter.setConfiguration(configuration_pdf);
 									break;
 								case "html":
 									exporter = new HtmlExporter();
@@ -244,7 +248,7 @@ public static splash splash = new splash();
 					 			}
 							if (!exportFormat.equals("html"))
 								{
-								exporter.setExporterOutput(new SimpleWriterExporterOutput(fos));
+								exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
 								}
 
 							exporter.setExporterInput(new SimpleExporterInput(print));
