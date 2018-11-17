@@ -211,6 +211,7 @@ public static splash splash = new splash();
 									SimplePdfExporterConfiguration configuration_pdf = new SimplePdfExporterConfiguration();
 									//configuration_pdf.setPermissions(PdfWriter.AllowCopy | PdfWriter.AllowPrinting);
 									exporter.setConfiguration(configuration_pdf);
+									exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
 									break;
 								case "html":
 									exporter = new HtmlExporter();
@@ -224,6 +225,7 @@ public static splash splash = new splash();
 									SimpleCsvExporterConfiguration configurationCsv = new SimpleCsvExporterConfiguration();
 									configurationCsv.setFieldDelimiter(";");
 									exporter.setConfiguration(configurationCsv);
+									
 									break;
 								case "xls":// Exporta el informe a XLS
      									exporter = new JRXlsExporter();
@@ -246,9 +248,9 @@ public static splash splash = new splash();
             								JOptionPane.showMessageDialog(null, "Formato desconocido" , "Eneboo Reports", 1);							
 
 					 			}
-							if (!exportFormat.equals("html"))
+							if (!exportFormat.equals("html") && !exportFormat.equals("pdf"))
 								{
-								exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+								exporter.setExporterOutput(new SimpleWriterExporterOutput(fos));
 								}
 
 							exporter.setExporterInput(new SimpleExporterInput(print));
