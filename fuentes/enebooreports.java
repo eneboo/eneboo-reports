@@ -202,7 +202,10 @@ public static splash splash = new splash();
 							}
 							else if (pdf) {
 									File file = new File(impresora);
-        								FileOutputStream fos = new FileOutputStream(file,true);
+
+									if (file.exists() && !file.delete())
+                                         					JOptionPane.showMessageDialog(null, "El fichero previo " + file + " no se puede borrar." , "Eneboo Reports", 1);        								
+									FileOutputStream fos = new FileOutputStream(file,true);
 
 					 			switch (exportFormat) {
 								case "pdf": 							
@@ -264,6 +267,8 @@ public static splash splash = new splash();
         									nIntentos++;
     									    } catch (InterruptedException ie) { /* safe to ignore */ }
 								}
+							//fos.flush();
+							fos.close();
 
 					 			if(modoCloud && file.exists())
 					 				{
