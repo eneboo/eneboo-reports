@@ -175,7 +175,7 @@ public static splash splash = new splash();
 					if (modoCloud)
 						{
 						pdf = true;
-						fileTempCloud = DigestUtils.shaHex(String.valueOf(System.currentTimeMillis()));
+						fileTempCloud = DigestUtils.sha1Hex(String.valueOf(System.currentTimeMillis()));
 						impresora = "/downloads/"+ fileTempCloud + ".pdf";//Ruta de la impresora
 												
 						}	
