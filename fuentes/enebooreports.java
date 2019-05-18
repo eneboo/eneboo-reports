@@ -34,7 +34,9 @@ import net.sf.jasperreports.view.JasperViewer;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import org.apache.commons.codec.digest.DigestUtils;
 
-
+import org.w3c.dom.Document;
+import net.sf.jasperreports.engine.util.JRXmlUtils;
+import net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory;
 
 
 public class enebooreports {
@@ -53,6 +55,7 @@ public static splash splash = new splash();
 			    exportFormat = "pdf";
                            // String changelog = "";
                             Image img;
+			    JasperPrint print;
 			    Boolean pdf,impDirecta, guardaTemporal, modoCloud;
 			    int nCopias, nParametrosJasper;
 			    long start;
@@ -167,6 +170,11 @@ public static splash splash = new splash();
 									{
 									exportFormat = parametroValor[j];
 									}
+								if(parametroNombre[j].equals("XML_URL"))
+									{
+									Document document = JRXmlUtils.parse(JRLoader.getLocationInputStream(parametroValor[j]));
+									hm.put(JRXPathQueryExecuterFactory.PARAMETER_XML_DATA_DOCUMENT, document);
+									}
 					      			
 					      			
 					      			}
@@ -180,8 +188,7 @@ public static splash splash = new splash();
 												
 						}	
 					
-					
-					JasperPrint print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
+					print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
 					//Rellenamos con numCopias
 					int sizeJasper = print.getPages().size();   
 					JasperPrint printCopy = print;
