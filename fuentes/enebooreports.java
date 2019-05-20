@@ -37,6 +37,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.w3c.dom.Document;
 import net.sf.jasperreports.engine.util.JRXmlUtils;
 import net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory;
+import javax.imageio.ImageIO;
 
 
 public class enebooreports {
@@ -62,7 +63,12 @@ public static splash splash = new splash();
         		    Exporter exporter = new JRPdfExporter();
 			    Class.forName(args[0]);
 			    //JOptionPane.showMessageDialog(null, "Init iniciado" , "Eneboo Reports", 1);
-			    InputStream is=enebooreports.class.getClass().getResourceAsStream("/otros/init.jasper");
+			    InputStream is=enebooreports.class.getClassLoader().getResourceAsStream("/otros/init.jasper");
+			    if (is == null)
+				{
+				is=enebooreports.class.getClassLoader().getResourceAsStream("otros/init.jasper");
+				}
+				
 			    JasperReport creditos = (JasperReport) JRLoader.loadObject(is);
 			    JasperReport report = creditos;
 
@@ -332,10 +338,22 @@ public static splash splash = new splash();
 	
 	public static Boolean mostrarVisor(JasperPrint print, String build) 
 									{
+							ImageIcon image_icon = new ImageIcon();
 							try {
 									JasperViewer viewer = new JasperViewer(print, false);
                                     					viewer.setTitle(print.getName() + " - Eneboo Reports"); 
-									viewer.setIconImage(new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo32.gif")).getImage());
+									InputStream stream = enebooreports.class.getClassLoader().getResourceAsStream("/otros/logo32.gif");
+									if (stream == null)
+										{
+										stream = enebooreports.class.getClassLoader().getResourceAsStream("otros/logo32.gif");
+										}
+									try {
+										image_icon = new ImageIcon(ImageIO.read(stream));
+	    									} catch(IOException e) {
+										//Sin splash
+										}
+
+									viewer.setIconImage(image_icon.getImage());
 
 									//PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
 									//printRequestAttributeSet.add(new Copies(nCopias)); // *************** Numero de copias
