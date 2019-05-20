@@ -71,6 +71,13 @@ for ficheros in *.jar
     	fi
   done
 
+cd ../otros
+for ficheros in *.*
+  do
+    echo "  otros/$ficheros" >> ../manifiesto.txt
+  done
+
+
 echo -e "\n* Generando enebooreports.jar"
 cd ..
 cp temp/enebooreports.class .
