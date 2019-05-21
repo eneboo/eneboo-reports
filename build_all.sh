@@ -46,7 +46,7 @@ cd temp
 for ficheros in *.java
   do
   echo "- $ficheros"
-  javac -Xlint:deprecation -classpath ../lib:../temp $ficheros >> /dev/null
+  javac -Xlint:deprecation -proc:none -Xlint:unchecked -classpath ../lib:../temp $ficheros >> /dev/null
   done
   
 echo -e "\n* Sustituyendo clases"
