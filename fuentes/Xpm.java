@@ -1701,13 +1701,11 @@ public class Xpm
 			
 
 		if(charsperpixel==1){
-			colorlookup.put(new Integer(' '),
-					new Integer(0x00000000));
+			colorlookup.put(Integer.valueOf(' '), Integer.valueOf(0x00000000));
 		} else {
 			int tmpchar=(' ' &0xff) <<8;
 			tmpchar |=  (' '&0xff);
-			colorlookup.put(new Integer((tmpchar&0xffff)),
-					new Integer(0x00000000));
+			colorlookup.put(Integer.valueOf((tmpchar&0xffff)), Integer.valueOf(0x00000000));
 			
 		}
 
@@ -1744,7 +1742,7 @@ public class Xpm
 			}
 
 			if(charsperpixel==1){
-				colref=new Integer(xpm.charAt(parse++));
+				colref= Integer.valueOf(xpm.charAt(parse++));
 			} else
 			if(charsperpixel==2) 	
 				{
@@ -1760,7 +1758,7 @@ public class Xpm
 					(tmpchar&0xffff));
 					}
 
-				colref=new Integer(tmpchar&0xffff);
+				colref= Integer.valueOf(tmpchar&0xffff);
 				} else
 			if(charsperpixel==3)
 				{
@@ -1779,7 +1777,7 @@ public class Xpm
 				      " which generates char "+
 					(tmpchar&0xffffff));
 				}
-				colref=new Integer(tmpchar&0xffffff);
+				colref= Integer.valueOf(tmpchar&0xffffff);
 				} else
 				{
 
@@ -1799,11 +1797,11 @@ public class Xpm
 				      " which generates char "+
 					(tmpchar&0xffffffff));
 				}
-				colref=new Integer(tmpchar&0xffffffff);
+				colref= Integer.valueOf(tmpchar&0xffffffff);
 				}
 		
 
-			rgb = new Integer(NameToRGB(colorname));
+			rgb = Integer.valueOf(NameToRGB(colorname));
 
 			if(debugflag){
 			debug("Color num parsed for \"" +colorname+"\"("+
@@ -1850,14 +1848,14 @@ public class Xpm
 
 				if(charsperpixel==1){
 					tmpchar=xpm.charAt(pix);
-					pixchar=new Integer(tmpchar&0xffff);
+					pixchar= Integer.valueOf(tmpchar&0xffff);
 				} else
 				if(charsperpixel==2)
 					{
 					tmpchar=xpm.charAt(pix++);
 					tmpchar = (tmpchar&0xff)<<8;
 					tmpchar |= xpm.charAt(pix) & 0xff;
-					pixchar=new Integer(tmpchar&0xffff);
+					pixchar= Integer.valueOf(tmpchar&0xffff);
 				}  else
 				if(charsperpixel==3)
 					{ //3 charsperpixel
@@ -1868,7 +1866,7 @@ public class Xpm
 					tmpchar = (tmpchar&0xff)<<16;
 					tmpchar |= (tmpchar2&0xff)<<8;
 					tmpchar |= (tmpchar3&0xff);
-					pixchar=new Integer(tmpchar&0xffffff);
+					pixchar= Integer.valueOf(tmpchar&0xffffff);
 					} 
 				else
 					{ //4 charsperpixel
@@ -1881,7 +1879,7 @@ public class Xpm
 					tmpchar |= (tmpchar2&0xff)<<16;
 					tmpchar |= (tmpchar3&0xff)<<8;
 					tmpchar |= (tmpchar4&0xff);
-					pixchar=new Integer(tmpchar&0xffffffff);
+					pixchar= Integer.valueOf(tmpchar&0xffffffff);
 					}
 				
 
