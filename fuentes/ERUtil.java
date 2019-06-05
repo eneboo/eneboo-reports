@@ -30,6 +30,15 @@ public static String calculaDC(String entidad, String sucursal, String n_cuenta)
         String dc2 = "";
         String enti = entidad;
         String sucur = sucursal;
+        
+        String test_l = entidad + sucursal + n_cuenta; 
+        if (test_l.length() < 18)
+        {
+        	dc = "ERROR";
+        	return dc;
+        }
+        
+        
         /*Primer dígito.*/
         for (int i = 0; i < 4; i++) {
             if (i==0){
