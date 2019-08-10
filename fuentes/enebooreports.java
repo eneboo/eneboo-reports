@@ -410,15 +410,22 @@ public static splash splash = new splash();
 		int selectedService = -1;
 		String listadoImpresorasDisponibles = "";
 		/* Scan found services to see if anyone suits our needs */
-		for(int i = 0; i < services.length;i++){
+		for(int i = 0; i < services.length;i++)
+				{
 				if(services[i].getName().contains(impresora))
 						{
 						job.setPrintService(services[i]);
-						selectedService = i;	
+						selectedService = i;
+						break;
 						}
 				listadoImpresorasDisponibles += services[i].getName() + "\n";
-							}
-		if (listadoImpresorasDisponibles.equals("")) listadoImpresorasDisponibles = "¡¡ Opppps !! . No se han detectado impresoras en el sistema";
+				}
+		
+		if (services.length == 0)
+			{
+			listadoImpresorasDisponibles = "¡¡ Opppps !! . No se han detectado impresoras en el sistema";
+			}
+		
 		if ( selectedService > -1) 
 			{
 			
