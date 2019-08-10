@@ -50,116 +50,101 @@ public static String versionJR = jrversion.jasper();
 public static splash splash = new splash();
                 public static void main(String[] args) throws IOException {     
 			try {
-			    //splash.mostrar(); //Mostramos splash
+
 			    String ficheroTemp;
-                            String impresora,cloudID;
-			    exportFormat = "pdf";
-                           // String changelog = "";
-                            Image img;
+                String impresora,cloudID;
+                Image img;
 			    JasperPrint print;
 			    Boolean pdf,impDirecta, guardaTemporal, modoCloud;
 			    int nCopias, nParametrosJasper;
 			    long start;
-        		    Exporter exporter = new JRPdfExporter();
+        		Exporter exporter = new JRPdfExporter();
 			    Class.forName(args[0]);
-			    //JOptionPane.showMessageDialog(null, "Init iniciado" , "Eneboo Reports", 1);
 			    InputStream is=enebooreports.class.getClassLoader().getResourceAsStream("/otros/init.jasper");
 			    if (is == null)
-				{
-				is=enebooreports.class.getClassLoader().getResourceAsStream("otros/init.jasper");
-				}
+					{
+			    	is=enebooreports.class.getClassLoader().getResourceAsStream("otros/init.jasper");
+					}
 				
 			    JasperReport creditos = (JasperReport) JRLoader.loadObject(is);
 			    JasperReport report = creditos;
 
-			    // Cargamos changelog
-			   // InputStream chl = enebooreports.class.getResourceAsStream("/otros/changelog");
-			    
-			    
-			    //PopupMenu popMenu= new PopupMenu();
- 			    //MenuItem salir = new MenuItem("Salir");
- 			    //popMenu.add(salir);
- 			    
- 			    //if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0)
- 			    //	{
-  	                    //	img = new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo16.gif")).getImage();
-  	                    //	}
-  	                    //	else
-  	                    //	{
-  	                    //	img = new javax.swing.ImageIcon(enebooreports.class.getClass().getResource("/otros/logo24.gif")).getImage();
-  	                    //	}
- 	                   //TrayIcon trayIcon = new TrayIcon(img, "Eneboo Reports", popMenu);
- 	                   //SystemTray.getSystemTray().add(trayIcon);
- 	                               
- 	                   
-
-			    
-     			   // BufferedReader br2 = new BufferedReader(new InputStreamReader(chl));
-     			   // String line= null;
-     			   // String listadoCompleto = "";
-     			   // while (null != (line = br2.readLine())) {
-        		   //					 listadoCompleto = listadoCompleto + line + "<br>";
-      			   //	        			    }  
-
-   			   // enebooreports.driverSQL = args[1];
    			   if (enebooreports.conn != null) //Si existe,cerramos la conexión previa
+   			   		{
            			enebooreports.conn.close();
-                            enebooreports.conn = DriverManager.getConnection(args[1],args[2],args[3]);
-                            //JOptionPane.showMessageDialog(null, "Init finalizado" , "Eneboo Reports", 1);
+   			   		}
+   			   	enebooreports.conn = DriverManager.getConnection(args[1],args[2],args[3]);
+   			   	BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
 			
 			    do
                               {
-                            BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
-			    System.out.flush();// empties buffer, before you input text
-			    ficheroTemp =""; //Nombre fichero Temporal
-          		    ficheroTemp = stdin.readLine();
-			    if (ficheroTemp == null ) System.exit(0);
-			    enebooreports.ficheroTemp = ficheroTemp;
-			    start = System.currentTimeMillis(); /* Para controlar el tiempo */					
-                            guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
+			    			//Inicializa los valores.
+			    			ficheroTemp =""; //Nombre fichero Temporal
+			    			guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
                             modoCloud = false;
                             cloudID = "";
+                            pdf = false; // exporta a pdf
+                            nCopias = 0; // Número de copias
+                            impresora =""; // nombre de impresora
+                            impDirecta = false; // impresión directa
+                            exportFormat = "pdf";
+                            
+                            
+                            
+                            
+                            //BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in)); //Borra el buffer (olvida)
+                            System.out.flush();// empties buffer, before you input text
+                            
+                            ficheroTemp = stdin.readLine();
+                            if (ficheroTemp == null )
+                            	{	
+                            	System.exit(0);
+                            	}
+                            
+                            enebooreports.ficheroTemp = ficheroTemp;
+                            start = System.currentTimeMillis(); /* Para controlar el tiempo */					
                             guardaTemporal = Boolean.parseBoolean(stdin.readLine());
-		            pdf = false; // exporta a pdf
                             pdf = Boolean.parseBoolean(stdin.readLine());
-		            nCopias = 0; // Número de copias
                             nCopias = Integer.parseInt(stdin.readLine());
-			    impresora =""; // nombre de impresora
                             impresora = stdin.readLine();
-			    impDirecta = false; // impresión directa
                             impDirecta = Boolean.parseBoolean(stdin.readLine());
-			    if (!impDirecta) splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
+                            
+                            if (!impDirecta) 
+                            	{
+                            	splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
+                            	}
                             nParametrosJasper = 0; // Número de parametros que vienen (Pareja Nombre-Valor)
                             nParametrosJasper = Integer.parseInt(stdin.readLine());
                             String[] parametroNombre = new String[nParametrosJasper]; 
                             String[] parametroValor = new String[nParametrosJasper];
-                          				  for(int i = 0; i < nParametrosJasper; i++ ) {
-	 									parametroNombre[i] = stdin.readLine();
-	 									parametroValor[i] = stdin.readLine();  
-							//JOptionPane.showMessageDialog(null, "PARAMETRO  " + parametroNombre[i] + "-" + parametroValor[i] , "Eneboo Reports", 1);
-													}
-                        java.util.Map<String, Object> hm = new HashMap<String,Object>(); //INICIALIZO MAPA    				
-			if (ficheroTemp.equals( "version" )) 
-						{
-						report = creditos;
-						guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
-						hm.put("VERSION", enebooreports.build);
-						//hm.put("CHANGELOG",listadoCompleto);
-						hm.put("VERSIONJR",enebooreports.versionJR);
-						//if (!impDirecta) {
-						//hm.put
-						//}						
-						}
-					else {     
-                          	       		if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
-                                       				guardaTemporal = true; //Para no intentar borrar luego un fichero que no existe
-                                       			 		 else 
-                                        		 	report = JasperCompileManager.compileReport(ficheroTemp);
+                          	for(int i = 0; i < nParametrosJasper; i++ ) 
+                          		{
+	 							parametroNombre[i] = stdin.readLine();
+	 							parametroValor[i] = stdin.readLine();  
+								}
+                          	java.util.Map<String, Object> hm = new HashMap<String,Object>(); //INICIALIZO MAPA    				
+                          	if (ficheroTemp.equals( "version" )) 
+                          		{
+                          		report = creditos;
+                          		guardaTemporal = true;//Para no intentar borrar luego un fichero que no existe
+                          		hm.put("VERSION", enebooreports.build);
+                          		hm.put("VERSIONJR",enebooreports.versionJR);
+                          		}
+                          	else 
+                          		{     
+                          	       if (ficheroTemp.equals( "Repetir" ))//Solo compilar si no se llama repetir.
+                          	       		{
+                          	    	   	guardaTemporal = true; //Para no intentar borrar luego un fichero que no existe
+                          	       		}
+                                   else
+                                   		{
+                                        report = JasperCompileManager.compileReport(ficheroTemp);
+                                   		}
 
-	                                       for(int j = 0; j < nParametrosJasper; j++ )
-                         				  if(!parametroValor[j].equals( "") && !parametroNombre[j].equals( ""))
-                         				  	{
-	 						 		if (parametroNombre[j].equals("REPORT_LOCALE"))
+	                             for(int j = 0; j < nParametrosJasper; j++ )
+	                            	 if(!parametroValor[j].equals( "") && !parametroNombre[j].equals( ""))
+	                            	 	{
+	                            		 if (parametroNombre[j].equals("REPORT_LOCALE"))
 	 						 				{
 	 						 				hm.put(parametroNombre[j],new java.util.Locale(parametroValor[j]));
 	 						 				}
@@ -167,25 +152,28 @@ public static splash splash = new splash();
 	 						 				{
 	 						 				hm.put(parametroNombre[j], parametroValor[j]); //Seteamos Parametros en mapa
 	 						 				}
-					      			if(parametroNombre[j].equals("X2CANVAS")) //Comprobamos si estamos en modo cloud
-					      				{
-					      				cloudID = parametroValor[j];
-					      				modoCloud = true;
-					      				}
-								if(parametroNombre[j].equals("FORMAT"))
-									{
-									exportFormat = parametroValor[j];
-									}
-								if(parametroNombre[j].equals("XML_URL"))
-									{
-									Document document = JRXmlUtils.parse(JRLoader.getLocationInputStream(parametroValor[j]));
-									hm.put(JRXPathQueryExecuterFactory.PARAMETER_XML_DATA_DOCUMENT, document);
-									}
+	                            		 if(parametroNombre[j].equals("X2CANVAS")) //Comprobamos si estamos en modo cloud
+					      					{
+	                            			 cloudID = parametroValor[j];
+	                            			 modoCloud = true;
+					      					}
+	                            		 if(parametroNombre[j].equals("FORMAT"))
+	                            		 	{
+	                            			 exportFormat = parametroValor[j];
+	                            		 	}
+	                            		 if(parametroNombre[j].equals("XML_URL"))
+	                            		 	{
+	                            			 Document document = JRXmlUtils.parse(JRLoader.getLocationInputStream(parametroValor[j]));
+	                            			 hm.put(JRXPathQueryExecuterFactory.PARAMETER_XML_DATA_DOCUMENT, document);
+	                            		 	}
 					      			
 					      			
-					      			}
+	                            	 	}
 					      }
-					            
+					
+                    hm.put("COPIA", 0);
+                          	
+                          	
 					if (modoCloud)
 						{
 						pdf = true;
@@ -197,9 +185,11 @@ public static splash splash = new splash();
 					print = JasperFillManager.fillReport(report, hm, enebooreports.conn); //Rellenamos el report compilado
 					//Rellenamos con numCopias
 					int sizeJasper = print.getPages().size();   
-					JasperPrint printCopy = print;
+					
 					for(int i = 1; i < nCopias;i++){
 						for(int x = 0; x < sizeJasper;x++){
+							hm.put("COPIA", i);
+							JasperPrint printCopy = JasperFillManager.fillReport(report, hm, enebooreports.conn);
 							print.addPage(print.getPages().size(), (JRPrintPage) printCopy.getPages().get(x));
 						}
 					}
@@ -207,63 +197,65 @@ public static splash splash = new splash();
 
 					if (impDirecta) 
 							{
+							splash.ocultar();
 							if (!impresionDirecta( impresora, print )) {
 								JOptionPane.showMessageDialog(null, "Impresión directa en " + impresora + " sufrió un problema." , "Eneboo Reports", 1);
 								ficheroTemp = "version"; //Cierra la librería
 								}
-							splash.ocultar();
+							
 							}
-							else if (pdf) {
-									File file = new File(impresora);
+					else if (pdf) {
+								File file = new File(impresora);
 
-									if (file.exists() && !file.delete())
-                                         					JOptionPane.showMessageDialog(null, "El fichero previo " + file + " no se puede borrar." , "Eneboo Reports", 1);        								
-									FileOutputStream fos = new FileOutputStream(file,true);
+								if (file.exists() && !file.delete())
+										{
+                                     	JOptionPane.showMessageDialog(null, "El fichero previo " + file + " no se puede borrar." , "Eneboo Reports", 1);        								
+										} 
+							
+								FileOutputStream fos = new FileOutputStream(file,true);
 
 					 			switch (exportFormat) {
-								case "pdf": 							
-									exporter = new JRPdfExporter();
-									//exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
-									SimplePdfExporterConfiguration configuration_pdf = new SimplePdfExporterConfiguration();
-									//configuration_pdf.setPermissions(PdfWriter.AllowCopy | PdfWriter.AllowPrinting);
-									exporter.setConfiguration(configuration_pdf);
-									exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
-									break;
-								case "html":
-									exporter = new HtmlExporter();
-            								exporter.setExporterOutput(new SimpleHtmlExporterOutput(fos));
-									break;
-								case "xml":
-					 				exporter = new JRXmlExporter();
-            								break;
-								case "csv": // Exporta el informe a CSV
-					 				exporter = new JRCsvExporter();
-									SimpleCsvExporterConfiguration configurationCsv = new SimpleCsvExporterConfiguration();
-									configurationCsv.setFieldDelimiter(";");
-									exporter.setConfiguration(configurationCsv);
+					 									case "pdf": 							
+					 										exporter = new JRPdfExporter();
+					 										//exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+					 										SimplePdfExporterConfiguration configuration_pdf = new SimplePdfExporterConfiguration();
+					 										//configuration_pdf.setPermissions(PdfWriter.AllowCopy | PdfWriter.AllowPrinting);
+					 										exporter.setConfiguration(configuration_pdf);
+					 										exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
+					 										break;
+					 									case "html":
+					 										exporter = new HtmlExporter();
+					 										exporter.setExporterOutput(new SimpleHtmlExporterOutput(fos));
+					 										break;
+					 									case "xml":
+					 										exporter = new JRXmlExporter();
+					 										break;
+					 									case "csv": // Exporta el informe a CSV
+					 										exporter = new JRCsvExporter();
+					 										SimpleCsvExporterConfiguration configurationCsv = new SimpleCsvExporterConfiguration();
+					 										configurationCsv.setFieldDelimiter(";");
+					 										exporter.setConfiguration(configurationCsv);
+					 										break;
+					 									case "xls":// Exporta el informe a XLS
+					 										exporter = new JRXlsExporter();
+					 										SimpleXlsReportConfiguration configurationXls = new SimpleXlsReportConfiguration();
+					 										configurationXls.setOnePagePerSheet(true);
+					 										configurationXls.setDetectCellType(true);
+					 										configurationXls.setCollapseRowSpan(false);
+					 										configurationXls.setWhitePageBackground(false);
+					 										exporter.setConfiguration(configurationXls);
+					 										break;
+					 									case "xlsx":
+					 										exporter = new JRXlsxExporter();
+					 										break;
+					 									case "odt":
+					 										exporter = new JROdtExporter();
 									
-									break;
-								case "xls":// Exporta el informe a XLS
-     									exporter = new JRXlsExporter();
-									SimpleXlsReportConfiguration configurationXls = new SimpleXlsReportConfiguration();
-        								configurationXls.setOnePagePerSheet(true);
-        								configurationXls.setDetectCellType(true);
-        								configurationXls.setCollapseRowSpan(false);
-       									configurationXls.setWhitePageBackground(false);
-       									exporter.setConfiguration(configurationXls);
+					 										break;
+					 									default:
+					 										JOptionPane.showMessageDialog(null, "Formato desconocido" , "Eneboo Reports", 1);							
 
-									break;
-        							case "xlsx":
-            								exporter = new JRXlsxExporter();
-            								break;
-								case "odt":
-									exporter = new JROdtExporter();
-									
-									break;
-						        	default:
-            								JOptionPane.showMessageDialog(null, "Formato desconocido" , "Eneboo Reports", 1);							
-
-					 			}
+					 								}
 							if (!exportFormat.equals("html") && !exportFormat.equals("pdf"))
 								{
 								exporter.setExporterOutput(new SimpleWriterExporterOutput(fos));
@@ -298,22 +290,25 @@ public static splash splash = new splash();
 					 						}
 								splash.ocultar();					 			
 
-								}
-								          else
-								          	{
-								          	splash.ocultar();
-								          	//java.awt.Toolkit.getDefaultToolkit().beep();
-								          	if (!mostrarVisor( print, build))
-											{
-								          		JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
-											ficheroTemp = "version"; //Cierra la librería librería											
-											}								          	
-										}		  	       
+								} //pdf
+					else
+							{
+							splash.ocultar();
+							//java.awt.Toolkit.getDefaultToolkit().beep();
+							if (!mostrarVisor( print, build))
+									{
+								    JOptionPane.showMessageDialog(null, "El Visor sufrió un problema." , "Eneboo Reports", 1);
+									ficheroTemp = "version"; //Cierra la librería librería											
+									}								          	
+							}	
+					
 				if (!guardaTemporal)
 						{
-                                   		File ficheroT = new File(ficheroTemp);
-                                    		if (!ficheroT.delete())
-                                         		JOptionPane.showMessageDialog(null, "El fichero Temporal " + ficheroTemp + " no se puede borrar." , "Eneboo Reports", 1);
+                          File ficheroT = new File(ficheroTemp);
+                          if (!ficheroT.delete())
+                          		{
+                                 JOptionPane.showMessageDialog(null, "El fichero Temporal " + ficheroTemp + " no se puede borrar." , "Eneboo Reports", 1);
+                          		}
 						}
 		
  				} while (!ficheroTemp.equals( "version" ));
