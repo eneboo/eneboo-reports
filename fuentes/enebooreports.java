@@ -73,11 +73,14 @@ public static splash splash = new splash();
    			   		{
            			enebooreports.conn.close();
    			   		}
-   			   	enebooreports.conn = DriverManager.getConnection(args[1],args[2],args[3]);
-   			   	BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in));
-			
+   			   	enebooreports.conn = DriverManager.getConnection(args[1],args[2],args[3]);  
+   			   	
+   			   	InputStreamReader stream_reader = new InputStreamReader(System.in);
+   			   	BufferedReader stdin = new BufferedReader(stream_reader);
+   			   	
 			    do
                               {
+			    			
 			    			//Inicializa los valores.
 			    			ficheroTemp =""; //Nombre fichero Temporal
 			    			guardaTemporal = false; //bool que indica si se borra o no el temp al finalizar de usarlo.
@@ -87,41 +90,47 @@ public static splash splash = new splash();
                             nCopias = 0; // Número de copias
                             impresora =""; // nombre de impresora
                             impDirecta = false; // impresión directa
-                            exportFormat = "pdf";
-                            
-                            
-                            
-                            
-                            //BufferedReader stdin = new BufferedReader (new InputStreamReader(System.in)); //Borra el buffer (olvida)
+                            nParametrosJasper = 0; // Número de parametros que vienen (Pareja Nombre-Valor)
+                            exportFormat = "pdf";                           
+                             
                             System.out.flush();// empties buffer, before you input text
+                            do { //Esto es para limpiar suciedad en windows
+                            	ficheroTemp = stdin.readLine();
+                            	if (ficheroTemp == null )
+                            		{	
+                            		System.exit(0);
+                            		}
+                            	ficheroTemp = ficheroTemp.trim();
+                            	
+                            } while (ficheroTemp.contains("<") || ficheroTemp.contains(">"));
                             
-                            ficheroTemp = stdin.readLine();
-                            if (ficheroTemp == null )
-                            	{	
-                            	System.exit(0);
-                            	}
+                            //if (ficheroTemp == null )
+                            //	{	
+                            //	System.exit(0);
+                            //	}
                             
                             enebooreports.ficheroTemp = ficheroTemp;
-                            start = System.currentTimeMillis(); /* Para controlar el tiempo */					
-                            guardaTemporal = Boolean.parseBoolean(stdin.readLine());
-                            pdf = Boolean.parseBoolean(stdin.readLine());
-                            nCopias = Integer.parseInt(stdin.readLine());
-                            impresora = stdin.readLine();
-                            impDirecta = Boolean.parseBoolean(stdin.readLine());
+                            start = System.currentTimeMillis(); /* Para controlar el tiempo */	
+                            guardaTemporal = Boolean.parseBoolean(stdin.readLine().trim());
+                            pdf = Boolean.parseBoolean(stdin.readLine().trim());
+                            nCopias = Integer.parseInt(stdin.readLine().trim());
+                            impresora = stdin.readLine().trim();
+                            impDirecta = Boolean.parseBoolean(stdin.readLine().trim());
                             
                             if (!impDirecta) 
                             	{
                             	splash.mostrar(); //Si el break anterior no cierra la libreria , mostramos splash.
                             	}
-                            nParametrosJasper = 0; // Número de parametros que vienen (Pareja Nombre-Valor)
-                            nParametrosJasper = Integer.parseInt(stdin.readLine());
+                            
+                            nParametrosJasper = Integer.parseInt(stdin.readLine().trim());
                             String[] parametroNombre = new String[nParametrosJasper]; 
                             String[] parametroValor = new String[nParametrosJasper];
                           	for(int i = 0; i < nParametrosJasper; i++ ) 
                           		{
-	 							parametroNombre[i] = stdin.readLine();
-	 							parametroValor[i] = stdin.readLine();  
+	 							parametroNombre[i] = stdin.readLine().trim();
+	 							parametroValor[i] = stdin.readLine().trim();  
 								}
+                          	
                           	java.util.Map<String, Object> hm = new HashMap<String,Object>(); //INICIALIZO MAPA    				
                           	if (ficheroTemp.equals( "version" )) 
                           		{
@@ -477,7 +486,7 @@ public static splash splash = new splash();
 
 	
 	}catch (Exception e) {  
-            JOptionPane.showMessageDialog(null, "crearLogError :: Se ha producido un error (Exception) : \n " + e.toString(), "Eneboo Reports", 1);
+            JOptionPane.showMessageDialog(null, "crearLogError :: Se ha producido un error (Exception) : \n " + e.toString() + "\nError inicial: \n" + error.toString(), "Eneboo Reports", 1);
 	    e.printStackTrace();
 			     }
 	System.exit(1);  		
