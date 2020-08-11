@@ -237,13 +237,15 @@ public static splash splash = new splash();
 					 										exporter.setExporterOutput(new SimpleHtmlExporterOutput(fos));
 					 										break;
 					 									case "xml":
-					 										exporter = new JRXmlExporter();
+															exporter = new JRXmlExporter();
+															exporter.setExporterOutput(new SimpleWriterExporterOutput(fos));
 					 										break;
 					 									case "csv": // Exporta el informe a CSV
 					 										exporter = new JRCsvExporter();
 					 										SimpleCsvExporterConfiguration configurationCsv = new SimpleCsvExporterConfiguration();
 					 										configurationCsv.setFieldDelimiter(";");
-					 										exporter.setConfiguration(configurationCsv);
+															exporter.setConfiguration(configurationCsv);
+															exporter.setExporterOutput(new SimpleWriterExporterOutput(fos));
 					 										break;
 					 									case "xls":// Exporta el informe a XLS
 					 										exporter = new JRXlsExporter();
@@ -252,23 +254,21 @@ public static splash splash = new splash();
 					 										configurationXls.setDetectCellType(true);
 					 										configurationXls.setCollapseRowSpan(false);
 					 										configurationXls.setWhitePageBackground(false);
-					 										exporter.setConfiguration(configurationXls);
+															exporter.setConfiguration(configurationXls);
+															exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
 					 										break;
 					 									case "xlsx":
-					 										exporter = new JRXlsxExporter();
+															exporter = new JRXlsxExporter();
+															exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(fos));
 					 										break;
 					 									case "odt":
 					 										exporter = new JROdtExporter();
-									
+															exporter.setExporterOutput(new SimpleWriterExporterOutput(fos));
 					 										break;
 					 									default:
 					 										JOptionPane.showMessageDialog(null, "Formato desconocido" , "Eneboo Reports", 1);							
 
 					 								}
-							if (!exportFormat.equals("html") && !exportFormat.equals("pdf"))
-								{
-								exporter.setExporterOutput(new SimpleWriterExporterOutput(fos));
-								}
 
 							exporter.setExporterInput(new SimpleExporterInput(print));
 							exporter.exportReport();							
