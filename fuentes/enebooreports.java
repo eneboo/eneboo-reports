@@ -106,7 +106,7 @@ public static splash splash = new splash();
                             
                             
                             enebooreports.ficheroTemp = ficheroTemp;
-							if (!ficheroTemp.equals( "version" )) {
+							if (!ficheroTemp.equals( "version" ) && !ficheroTemp.equals( "Repetir" )) {
 								File file_temp = new File(ficheroTemp);
 
 								if (!file_temp.exists()) {
