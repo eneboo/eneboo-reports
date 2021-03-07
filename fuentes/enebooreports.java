@@ -104,12 +104,14 @@ public static splash splash = new splash();
                             	
                             } while (ficheroTemp.contains("<") || ficheroTemp.contains(">"));
                             
-                            //if (ficheroTemp == null )
-                            //	{	
-                            //	System.exit(0);
-                            //	}
                             
                             enebooreports.ficheroTemp = ficheroTemp;
+							File file_temp = new File(ficheroTemp);
+
+							if (!file_temp.exists()) {
+								System.exit(0);
+							}
+
                             start = System.currentTimeMillis(); /* Para controlar el tiempo */	
                             guardaTemporal = Boolean.parseBoolean(stdin.readLine().trim());
                             pdf = Boolean.parseBoolean(stdin.readLine().trim());
