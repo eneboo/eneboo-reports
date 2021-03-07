@@ -106,10 +106,12 @@ public static splash splash = new splash();
                             
                             
                             enebooreports.ficheroTemp = ficheroTemp;
-							File file_temp = new File(ficheroTemp);
+							if (!ficheroTemp.equals( "version" )) {
+								File file_temp = new File(ficheroTemp);
 
-							if (!file_temp.exists()) {
-								System.exit(0);
+								if (!file_temp.exists()) {
+									System.exit(0);
+								}
 							}
 
                             start = System.currentTimeMillis(); /* Para controlar el tiempo */	
